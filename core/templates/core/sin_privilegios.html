@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% block contenido %}
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="col-xl-12 col-md-12 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center">
+                                <div class="text-s font-weight-bold text-warning text-uppercase mb-1">
+                                   Usuario: <mark>{{user.username}} {{user.get_full_name}}</mark>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="row">
+                                    <div class="col">
+                                        <mark>No tiene suficientes privileguios para cargar la opción solicitada</mark><br>
+                                        <p>Para poder acceder, debes iniciar sesión con un usuario con privilegios necesarios</p>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="row">
+                                    <div class="col">
+                                        <a href="{% url 'listado_calculos' %}" class="btn btn-success mb-1"><span class="fas fa-home"></span> Ir al inicio</a>
+                                        <a href="{% url 'login' %}" class="btn btn-info mb-1"><span class="fas fa-sign-in-alt"></span> Ingresar con otro usuario</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock contenido %}

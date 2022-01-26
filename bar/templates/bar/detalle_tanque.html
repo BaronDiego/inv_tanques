@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Detalle Tanque{% endblock titulo %}
+{% block contenido %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Detalle Tanque {{de_Tk.tag}}</h1>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-8 col-xl-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <ul>
+                        <li>Id: <b>{{tanque.id}}</b></li>
+                        <li>Tipo: <b>{{tanque.tipo}}</b></li>
+                        <li>Diámetro: <b>{{tanque.diametro}} mm</b></li>
+                        <li>Altura: <b>{{tanque.altura_cilindro}} mm</b></li>
+                        <li>Altura medición: <b>{{tanque.altura_medicion}} mm</b></li>
+                        <li>Fecha Aforo: <b>{{tanque.fecha_aforo}}</b></li>
+                        <li>Capacidad: <b>{{tanque.volumen}} lts</b></li>
+                        <li>Tiene tabla aforo: 
+                            
+                            {% if bandera_ta %}
+                                <b>SI</b>
+                            {% else %}
+                                <b>NO</b>
+                            {% endif %}
+                                
+                        </li>
+                        <hr>
+                        <a href="{% url 'editar_tanque_bar' id_tanque %}" class="btn btn-primary">Editar</a>
+                        <a href="{% url 'eliminar_tanque_bar' id_tanque %}" class="btn btn-danger">Eliminar</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

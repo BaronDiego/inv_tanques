@@ -1,0 +1,111 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block titulo %}Estadisticas{% endblock titulo %}
+
+{% block contenido %}
+<div class="row">
+    <div class="col-sm-12 col-md-6 mb-2">
+        <div class="card border-left-success shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4 class="m-0 font-weight-bold text-success"><a href="{% url 'detalle_ocupacion_tk_ctg' id_tanque_108 %}">TK-108</a></h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="chart-container">
+                            <canvas id="myChart" width="400" height="300"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <p>Capacidad TK: <b>{{volumen_total_tk108}} lts</b></p>
+                        <p>Volumen Actual: <b>{{volumen_act_tk108|floatformat:"2"}} lts</b></p>
+                        <p>Producto: <b>{{lote_producto}}</b></p>
+                        <p>Masa (Kg): <b>{{masa_tk108|floatformat:"2"}}</b></p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <p>Última medición: <b>{{creado_tk108|date:"d b Y P"}}</b></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6 mb-2">
+        <div class="card border-left-success shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4 class="m-0 font-weight-bold text-success"><a href="{% url 'detalle_ocupacion_tk' id_tanque_27 %}">TK-27</a></h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div>
+                            <canvas id="myChart2" width="400" height="300"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <p>Capacidad TK: <b>{{volumen_total_tk27}} lts</b></p>
+                        <p>Volumen Actual: <b>{{volumen_act_tk27|floatformat:"2"}} lts</b></p>
+                        <p>Producto: <b>{{lote_productotk27}}</b></p>
+                        <p>Masa (Kg): <b>{{masa_tk27|floatformat:"2"}}</b></p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <p>Última medición: <b>{{creado_tk27|date:"d b Y P"}}</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var barColors = [ 'rgba(255, 99, 132, 0.2)', 'rgba(75, 192, 192, 0.2)'];
+
+    new Chart("myChart", {
+        type: "bar",
+        data: {
+            labels: ["Capacidad TK", "Ocupación TK"],
+            datasets: [{
+                backgroundColor: barColors,
+                borderColor:['rgb(255, 99, 132)', 'rgb(75, 192, 192)'],
+                borderWidth: 1,
+                data: {{data_tk108|safe}}
+            }]
+        },
+        options: {
+            plugins:{
+                legend: {display:false}
+            },
+            label: {display: false},
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+        }
+    });
+
+    new Chart("myChart2", {
+        type: "bar",
+        data: {
+            labels: ["Capacidad TK", "Ocupación TK"],
+            datasets: [{
+                backgroundColor: barColors,
+                borderColor:['rgb(255, 99, 132)', 'rgb(75, 192, 192)'],
+                borderWidth: 1,
+                data: {{data_tk27|safe}}
+            }]
+        },
+        options: {
+            plugins:{
+                legend: {display:false}
+            },
+            label: {display: false},
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+        }
+    });
+</script>
+{% endblock contenido %}

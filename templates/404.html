@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block titulo %}Página no encontrada{% endblock titulo %}
+
+
+{% if user.is_authenticated %}
+    {% block contenido %}
+        <h2>¡Vaya, parece que el recurso que buscas aún no se ha creado!</h2>
+    {% endblock contenido %}
+{% else %}
+    {% block index %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col">
+                <h2>¡Vaya, parece que el recurso que buscas aún no se ha creado!</h2>
+                <p>Ingresa al portal, de pronto allí lo encuentres <a href="{% url 'login' %}">Ingresar</a></p>
+            </div>
+        </div>
+    </div>
+    {% endblock index %}
+{% endif %}
+    
+    
+    

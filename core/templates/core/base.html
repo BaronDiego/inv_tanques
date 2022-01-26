@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'img/favicon2.ico' %}"/>
+    <title>{% block titulo %}{% endblock titulo %}</title>
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/estilos.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/jquery-confirm.min.css' %}">
+
+</head>
+<body id="page-top">
+    <div id="wrapper">
+        <!-- <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="{% static 'img/favicon.png' %}" alt="AppGranel" height="70" width="70">
+        </div> -->
+        
+        {% if user.is_authenticated %}
+            {% include 'core/sidebar.html' %}
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <ul class="navbar-nav ml-auto">
+                            <div class="topbar-divider d-none d-sm-block"></div>
+                            <li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{user.username}}</span>
+                                    <img class="img-profile rounded-circle"
+                                        src="{% static 'img/favicon.png' %}">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                    aria-labelledby="userDropdown">
+                                    <!-- <a class="dropdown-item" href="#">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Profile
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Settings
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Activity Log
+                                    </a> -->
+                                    <!-- <div class="dropdown-divider"></div> -->
+                                    <a class="dropdown-item" href="{% url 'logout' %}">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Salir
+                                    </a>
+                                    <a class="dropdown-item" href="{% url 'password_change' %}">
+                                        <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Cambiar contraseña
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+            
+                    <div class="container-fluid">
+                        {% block contenido %}
+                        {% endblock contenido %}
+                    </div>
+            
+                </div>
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright &copy; Algranel S.A. 2021</span>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            
+        {% else %}
+            {% block login %}
+            {% endblock login %}
+            {% block logout %}
+            {% endblock logout %}
+            {% block index %}
+            {% endblock index %}
+        {% endif %}  
+    </div>
+
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'js/jquery-confirm.min.js' %}"></script>
+    <!-- <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script> -->
+
+
+    {% block control_modal %}
+    <script>
+        function abrir_modal(url) {
+            $('#popup').load(url, function () {
+                $(this).modal({
+                    backdrop: 'static',
+                    keyboard: false
+                })
+                $(this).modal('show')
+            });
+            return false;
+        }
+
+        function cerrar_modal() {
+            $('#popup').modal('hide');
+            return false;
+        }
+
+        function mensaje(msg, color = 'green') {
+            $.alert({
+                title: '',
+                theme: 'material',
+                type: color,
+                content: msg
+            });
+        } 
+        {% if messages %} 
+                {% for message in messages %} 
+                    mensaje('{{message}}')
+                {% endfor %} 
+        {% endif %}
+    </script>
+
+    {% endblock control_modal %}
+
+    {% block js_page %}
+
+    {% endblock js_page %}
+
+    
+</body>
+</html>

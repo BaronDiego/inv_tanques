@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Listado Volumen Tanques{% endblock titulo %}
+{% block contenido %}
+<div class="card border-left-success shadow h-100">
+    <div class="card-header py-3">
+        <h4 class="m-0 font-weight-bold text-primary">Listado Ocupación Tanques</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr class="text-center">
+                        <th>Tanque</th>
+                        <th>Volumen</th>
+                        <th>Temperatura TQ</th>
+                        <th>Modificafo</th>
+                        <th>Densidad</th>
+                        <th>Masa Kg</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in calculos %}
+                        <tr class="text-center">
+                            <td>{{c.tanque}}</td>
+                            <td>{{c.volumen|floatformat:2}}</td>
+                            <td>{{c.temperatura_tq}}</td>
+                            <td>{{c.creado}}</td>
+                            <td>{{c.densidad|floatformat:3}}</td>
+                            <td>{{c.masa|floatformat:2}} Kg</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block js_page %}
+<script>
+    $(document).ready(function(){
+        $('.table').DataTable();
+    });
+</script>
+{% endblock js_page %}

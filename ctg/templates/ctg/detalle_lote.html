@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Detalle Lote{% endblock titulo %}
+{% block contenido %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Detalle Lote {{de_Lt.referncia}} - {{de_Lt.producto}}</h1>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-8 col-xl-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <ul>
+                        <li>Id: <b>{{de_Lt.id}}</b></li>
+                        <li>Temperatura Ref: <b>{{de_Lt.temperatura_ref}}</b></li>
+                        <li>Densidad ref: <b>{{de_Lt.densidad_ref|floatformat:5}}</b></li>
+                        <li>Factor correccion: <b>{{de_Lt.factor_correccion|floatformat:3}}</b></li>
+                        <li>Nombre buque: 
+                            <b>
+                                {% if de_Lt.nombre_buque == None %}
+                                 ---
+                                {% else %}
+                                {{de_Lt.nombre_buque}}
+                                {% endif %}
+                            </b>
+                        </li>
+                        <li>Fecha llegada buque: 
+                            <b>
+                                {% if not de_Lt.fecha_llegada_buque %}
+                                    ---
+                                {% else %}
+                                    {{de_Lt.fecha_llegada_buque|date:"d b Y"}}
+                                {% endif %}
+                            </b>
+                        </li>
+                        <hr>
+                        <a href="{% url 'editar_lote_ctg' de_Lt.pk %}" class="btn btn-primary">Editar</a>
+                        <a href="{% url 'eliminar_lote_ctg' de_Lt.pk %}" class="btn btn-danger">Eliminar</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
