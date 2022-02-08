@@ -51,8 +51,8 @@ class AforoTanqueBar(models.Model):
 
 
 class LoteBar(ClaseBase):
-    referencia = models.CharField(max_length=20)
-    producto = models.CharField(max_length=25)
+    referencia = models.CharField(max_length=50)
+    producto = models.CharField(max_length=55)
     temperatura_ref = models.FloatField(max_length=4, blank=True, null=True)
     densidad_ref = models.FloatField(max_length=6, blank=True, null=True)
     factor_correccion = models.FloatField(max_length=6, blank=True, null=True, verbose_name="Factor corrección")
