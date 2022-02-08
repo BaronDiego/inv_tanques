@@ -324,51 +324,6 @@ def detalle_ocupacion_tk(request, id):
     except TypeError:
         porcentaje_ocupacion = 0
 
-    bodega_str = str(bodega)
-    tag_str = str(tag)
-    lote_str = str(lote_refencia)
-    masa_tk_str = int(masa_tk)
-    lote_producto_str= str(lote_producto)
-    
-    ### Enviar cantidad a SIESA ###
-    # url = "http://localhost/api_GTIntegration/api/algranel/ajusteInventario"
-    # datos = {
-    #     "ajuste": {
-    #         "f350_id_co": "002",
-    #         "f350_id_tipo_docto": "AJM",
-    #         "f350_consec_docto": "1",
-    #         "f350_fecha": "20211130",
-    #         "f350_id_tercero": "",
-    #         "f350_notas": "TEST api",
-    #         "f450_docto_alterno": "INDO7461",
-    #         "movimiento": [
-    #             {
-    #                 "f470_id_co": "002",
-    #                 "f470_id_tipo_docto": "AJM",
-    #                 "f470_consec_docto": "1",
-    #                 "f470_nro_registro": "1",
-    #                 "f470_id_bodega": bodega,
-    #                 "f470_id_ubicacion_aux": tag,
-    #                 "f470_id_lote": lote_refencia,
-    #                 "f470_id_motivo": "",
-    #                 "f470_id_co_movto": "002",
-    #                 "f470_id_ccosto_movto": "",
-    #                 "f470_id_unidad_medida": "KG",
-    #                 "f470_cant_base": masa_tk_str,
-    #                 "f470_costo_prom_uni": "",
-    #                 "f470_notas": "TEST API",
-    #                 "f470_referencia_item": lote_producto,
-    #                 "f470_id_un_movto": "001"
-    #             }
-    #         ]
-    #     },
-    #     "f_cia": "1"
-    # }
-
-    # headers = {"content-type": "application/json"}
-
-    # r = post(url=url, data=json.dumps(datos), headers=headers)
-    # print(r)
 
     return render(request, 'bun/detalle_ocupacion_tk.html', {
         'mediciones':calculo, 
@@ -584,6 +539,8 @@ def enviar_data_erp(request, id):
     terminal = tanque[0]['terminal']
     bodega = tanque[0]['bodega']
     masa_tk_str = int(masa_tk)
+    hoy = date.today()
+    hoy2=hoy.strftime("%y%m%d")
     
     ### Enviar cantidad a SIESA ###
     url = "http://localhost/api_GTIntegration/api/algranel/ajusteInventario"
@@ -592,7 +549,7 @@ def enviar_data_erp(request, id):
             "f350_id_co": "002",
             "f350_id_tipo_docto": "AJM",
             "f350_consec_docto": "1",
-            "f350_fecha": "20211130",
+            "f350_fecha": hoy2,
             "f350_id_tercero": "",
             "f350_notas": "TEST api",
             "f450_docto_alterno": "INDO7461",

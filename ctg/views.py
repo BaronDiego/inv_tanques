@@ -394,13 +394,13 @@ def calculo_pruebas_ctg(request):
                 form.instance.masa = form.instance.densidad * form.instance.volumen
                 form.instance.uc = request.user
                 form.save()
-                return redirect('listado_tanques_ope_pruebas')
+                return redirect('detalle_ocupacion_tk_pruebas_ctg')
             except IndexError:
                 messages.error(request ,"No hay tabla de aforo cargada para este tanque, o el valor de la medición esta fuera de rango")
-                return redirect('importar')
+                return redirect('importar_ctg')
             except TypeError:
                 messages.error(request ,"No hay tabla de aforo cargada para este tanque")
-                return redirect('importar')
+                return redirect('importar_ctg')
                 
     else:
         form = CalculoFormPruebasCtg()
@@ -509,6 +509,8 @@ def enviar_data_erp(request, id):
     terminal = tanque[0]['terminal']
     bodega = tanque[0]['bodega']
     masa_tk_str = int(masa_tk)
+    hoy = date.today()
+    hoy2=hoy.strftime("%y%m%d")
     
     ### Enviar cantidad a SIESA ###
     url = "http://localhost/api_GTIntegration/api/algranel/ajusteInventario"
@@ -517,7 +519,7 @@ def enviar_data_erp(request, id):
             "f350_id_co": "002",
             "f350_id_tipo_docto": "AJM",
             "f350_consec_docto": "1",
-            "f350_fecha": "20211130",
+            "f350_fecha": hoy2,
             "f350_id_tercero": "",
             "f350_notas": "TEST api",
             "f450_docto_alterno": "INDO7461",
