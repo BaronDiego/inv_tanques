@@ -435,7 +435,7 @@ def exportar_excel(request, id):
 
 
 @login_required(login_url='login')
-@permission_required('bun.add_calculo_pruebas', login_url='sin_privilegios')
+@permission_required('bun.add_calculopruebas', login_url='sin_privilegios')
 def calculo_pruebas(request):
     if request.method == 'POST':
         form = CalculoFormPruebas(data=request.POST)

@@ -1,0 +1,135 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Detalle Ocupación Tanque - Pruebas{% endblock titulo %}
+{% block contenido %}
+<div class="card border-left-info shadow h-100">
+    <div class="card-header py-3">
+        <h4 class="m-0 font-weight-bold text-success">Detalle Ocupación Tanque: {{tag}} - {{terminal}}</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-8 col-xl-6">
+                <div class="chart-container">
+                    <canvas id="myChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-8 col-xl-6">
+                <p>Capacidad TK: <b>{{volumen_total_tk|floatformat:"2"}} lts</b></p>
+                <p>Volumen Actual: <b>{{volumen_actual_tk|floatformat:"2"}} lts</b></p>
+                <p>% de Ocupación: <b>{{porcentaje_ocupacion|floatformat:"2"}}%</b></p>
+                <p>Lote: <b>{{lote_producto}} - {{lote_refencia}}</b></p>
+                <p>Masa: <b>{{masa_tk|floatformat:"2"}} Kg</b></p>
+                <p>Última medición: <b>{{ultima_medicion|date:"d b Y P"}}</b></p>
+                <p>Tipo medición:
+                    <b>
+                        {% if tipo_medicion == "I" %}
+                        Inical
+                        {% endif %}
+                        {% if tipo_medicion == "F" %}
+                        Final
+                        {% endif %}
+                        {% if tipo_medicion == "D" %}
+                        Definitivo
+                        {% endif %}
+                        {% if tipo_medicion == "C" %}
+                        Control
+                        {% else %}
+                        Prueba
+                        {% endif %}
+                    </b>
+                </p>
+            </div>
+        </div>
+        <hr>
+        <div>
+            <div class="row ml-auto">
+                <div class="col-md-10 col-sm-12">
+                    <h4 class="m-0 font-weight-bold text-success">Control de Mediciones</h4>
+                </div>
+                <div class="col-md-2 col-sm-12">
+                    <a href="{% url 'exportar_excel_ctg' id_tk %}"><i class="fas fa-file-excel mr-auto"></i> Exportar a
+                        Excel</a>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr class="text-center">
+                        <th>Fecha Medición</th>
+                        <th>Tipo Medición</th>
+                        <th>Volumen</th>
+                        <th>Temperatura TQ</th>
+                        <th>Densidad</th>
+                        <th>Masa Kg</th>
+                        <th>Lote</th>
+                        <th>Operador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in mediciones %}
+                    <tr class="text-center">
+                        <td>{{m.creado|date:"d b Y H:i"}}</td>
+                        <td>
+                            {% if m.estado == "I" %}
+                            Inical
+                            {% endif %}
+                            {% if m.estado == "F" %}
+                            Final
+                            {% endif %}
+                            {% if m.estado == "D" %}
+                            Definitivo
+                            {% endif %}
+                            {% if m.estado == "C" %}
+                            Control
+                            {% else %}
+                            Prueba
+                            {% endif %}
+                        </td>
+                        <td>{{m.volumen|floatformat:2}} lts</td>
+                        <td>{{m.temperatura_tq}}</td>
+                        <td>{{m.densidad|floatformat:5}}</td>
+                        <td>{{m.masa|floatformat:2}} Kg</td>
+                        <td>{{m.lote}}</td>
+                        <td>{{m.uc}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var barColors = ['rgba(255, 99, 132, 0.2)', 'rgba(75, 192, 192, 0.2)'];
+
+    new Chart("myChart", {
+        type: "bar",
+        data: {
+            labels: ["Capacidad TK", "Ocupación TK"],
+            datasets: [{
+                backgroundColor: barColors,
+                borderColor: ['rgb(255, 99, 132)', 'rgb(75, 192, 192)'],
+                borderWidth: 1,
+                data: {{data|safe}}
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            label: {
+                display: false
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+        }
+    });
+</script>
+{% endblock contenido %}
+{% block js_page %}
+{% endblock js_page %}

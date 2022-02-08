@@ -20,5 +20,8 @@ urlpatterns = [
     path('detalle_lote/<pk>/', views.DetalleLote.as_view(), name='detalle_lote_ctg'),
     path('eliminar_lote/<pk>/', views.BorrarLote.as_view(), name='eliminar_lote_ctg'),
     path('calcular_api/', views.crearCalculoApi, name='calcular_api_ctg'),
+    path('calcular_pruebas/', views.calculo_pruebas_ctg, name='calcular_pruebas_ctg'),
+    path('detalle_ocupacion_tk_pruebas/<int:id>/', views.detalle_ocupacion_tk_pruebas, name='detalle_ocupacion_tk_pruebas_ctg'),
+    path('listado_tanques_operacion_pruebas/', views.listado_tanques_pruebas, name='listado_tanques_ope_pruebas_ctg'),
     path('enviar_data_erp_ctg/<int:id>/', views.enviar_data_erp, name='enviar_data_erp_ctg'),
 ]

@@ -1,5 +1,5 @@
 from django import forms
-from .models import TanqueCtg, CalculoCtg, LoteCtg
+from .models import TanqueCtg, CalculoCtg, LoteCtg, CalculoPruebasCtg
 
 
 class TanqueForm(forms.ModelForm):
@@ -24,3 +24,8 @@ class LoteForm(forms.ModelForm):
     class Meta:
         model = LoteCtg
         exclude = ['creado', 'actualizado', 'uc', 'um']
+
+class CalculoFormPruebasCtg(forms.ModelForm):
+    class Meta:
+        model = CalculoPruebasCtg
+        exclude = ['creado', 'actualizado', 'uc', 'um', 'volumen', 'densidad', 'masa', 'api', 'tabla_6d','tabla_13']

@@ -97,6 +97,29 @@ class CalculoCtg(ClaseBase):
         super(CalculoCtg, self).save()
 
 
+class CalculoPruebasCtg(ClaseBase):
+    tanque = models.ForeignKey(TanqueCtg, on_delete=models.CASCADE)
+    lote = models.ForeignKey(LoteCtg, on_delete=models.CASCADE, null=True, verbose_name="Referencia/Lote")
+    medicion = models.FloatField(max_length=7, blank=True, null=True, verbose_name="Medición" ,default=0)
+    tabla_6d = models.FloatField(max_length=8, blank=True, null=True, default=0)
+    tabla_13 = models.FloatField(max_length=8, blank=True, null=True, default=0)
+    volumen = models.FloatField(max_length=8, blank=True, null=True)
+    temperatura_tq = models.FloatField(max_length=4, blank=True, null=True)
+    sellos_valvulas = models.CharField(max_length=150, blank=True, verbose_name="Sellos Válvulas")
+    sellos_tapas = models.CharField(max_length=150, blank=True)
+    densidad = models.FloatField(max_length=8, blank=True, null=True, default=0)
+    masa = models.FloatField(max_length=8, blank=True, null=True)
+
+
+    class Meta:
+        ordering = ['-creado']
+
+    def save(self):
+        self.sellos_valvulas = self.sellos_valvulas.upper()
+        self.sellos_tapas = self.sellos_tapas.upper()
+        super(CalculoPruebasCtg, self).save()
+
+
 
 
 

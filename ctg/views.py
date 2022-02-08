@@ -13,9 +13,9 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Subquery
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import AforoTanqueCtg, CalculoCtg, TanqueCtg, LoteCtg
+from .models import AforoTanqueCtg, CalculoCtg, TanqueCtg, LoteCtg, CalculoPruebasCtg
 from .resources import AforoTanqueResourse
-from .forms import CalculoForm, TanqueForm, LoteForm, CalculoForm2
+from .forms import CalculoForm, TanqueForm, LoteForm, CalculoForm2, CalculoFormPruebasCtg
 from core.views import SinPrivilegios
 import django_excel as excel
 import locale
@@ -358,6 +358,120 @@ def exportar_excel(request, id):
     sheet = excel.pe.Sheet(export)
 
     return excel.make_response(sheet, "xlsx", file_name="data"+tag+"_"+strToday+".xlsx")
+
+@login_required(login_url='login')
+@permission_required('ctg.add_calculopruebasctg', login_url='sin_privilegios')
+def calculo_pruebas_ctg(request):
+    if request.method == 'POST':
+        form = CalculoFormPruebasCtg(data=request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+
+            if cd['medicion'] == None:
+                cd['medicion'] = 0
+            
+
+            medicion = cd['medicion']
+
+            tanque = TanqueCtg.objects.filter(id=request.POST['tanque']).values()
+            altura_medicion_tanque = tanque[0]['altura_medicion']
+
+            if medicion > altura_medicion_tanque:
+                messages.error(request ,"La medición es mayor que la altura de medición estabelecida")
+
+            temperatura_tanque = cd['temperatura_tq']
+            lote = LoteCtg.objects.filter(id=request.POST['lote']).values()
+            id_tanque = tanque[0]['id']
+            densidad_ref = lote[0]['densidad_ref']
+            temperatura_ref = lote[0]['temperatura_ref']
+            factor_correccion = lote[0]['factor_correccion']
+            
+            medicion_aforo = AforoTanqueCtg.objects.filter(tanque_id=id_tanque, nivel=medicion).values()
+
+            try:
+                form.instance.volumen = medicion_aforo[0]['medicion']
+                form.instance.densidad = densidad_ref - ((temperatura_tanque-temperatura_ref)*factor_correccion)
+                form.instance.masa = form.instance.densidad * form.instance.volumen
+                form.instance.uc = request.user
+                form.save()
+                return redirect('listado_tanques_ope_pruebas')
+            except IndexError:
+                messages.error(request ,"No hay tabla de aforo cargada para este tanque, o el valor de la medición esta fuera de rango")
+                return redirect('importar')
+            except TypeError:
+                messages.error(request ,"No hay tabla de aforo cargada para este tanque")
+                return redirect('importar')
+                
+    else:
+        form = CalculoFormPruebasCtg()
+        return render(request, 'ctg/calcular_pruebas.html', {'form':form})
+
+
+@login_required(login_url='login')
+def detalle_ocupacion_tk_pruebas(requeest, id):
+    calculo = CalculoPruebasCtg.objects.filter(tanque_id=id).order_by('-creado')[:2]
+    if calculo == "" or calculo == 0:
+        calculo = 0
+    calculo_tk = CalculoPruebasCtg.objects.filter(tanque_id=id).order_by('-creado').values()[:1]
+    if calculo_tk == "":
+        calculo_tk = 0
+    # volumen_actual_tk = calculo_tk[0]['volumen']
+    try:
+        volumen_actual_tk = calculo_tk[0]['volumen']
+        ultima_medicion = calculo_tk[0]['creado']
+        calculo_lote = calculo_tk[0]['lote_id']
+    except IndexError:
+        volumen_actual_tk = 0
+        ultima_medicion = 0
+        calculo_lote = 0
+    
+    lote = LoteCtg.objects.filter(id=calculo_lote).values()
+    try:
+        lote_producto = lote[0]['producto']
+        lote_refencia = lote[0]['referencia']
+        masa_tk = calculo_tk[0]['masa']
+        # lote_buque = lote[0]['nombre_buque']
+    except IndexError:
+        lote_producto = 0
+        masa_tk = 0
+
+    tanque = TanqueCtg.objects.filter(id=id).values()
+    tag = tanque[0]['tag']
+    id_tk = tanque[0]['id']
+    volumen_total_tk = tanque[0]['volumen']
+    data = [volumen_total_tk, volumen_actual_tk]
+    terminal = tanque[0]['terminal']
+
+    try:
+        porcentaje_ocupacion = (volumen_actual_tk / volumen_total_tk) * 100
+    except TypeError:
+        porcentaje_ocupacion = 0
+    
+
+    return render(requeest, 'ctg/detalle_ocupacion_tk_pruebas.html', {
+        'mediciones':calculo, 
+        'volumen_total_tk':volumen_total_tk,
+        'volumen_actual_tk':volumen_actual_tk,
+        'lote_producto':lote_producto,
+        'masa_tk':masa_tk,
+        'data':data,
+        'tag':tag,
+        'ultima_medicion':ultima_medicion,
+        'porcentaje_ocupacion':porcentaje_ocupacion,
+        'id_tk':id_tk,
+        'lote_refencia':lote_refencia,
+        'terminal':terminal
+        })
+
+
+@login_required(login_url='login')
+def listado_tanques_pruebas(request):
+    qs_1 = CalculoPruebasCtg.objects.filter(creado__gte=date.today())
+    qs_2 = TanqueCtg.objects.filter(id__in=Subquery(qs_1.values('tanque_id'))).values()
+    print(qs_2)
+    hoy = date.today()
+    print(hoy)
+    return render(request, 'ctg/listado_tanque_operacion_pruebas.html', {'qs_2':qs_2, 'hoy':hoy})
 
 
 @login_required(login_url='login')
