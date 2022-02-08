@@ -46,8 +46,7 @@
                     <h4 class="m-0 font-weight-bold text-success">Control de Mediciones</h4>
                 </div>
                 <div class="col-md-2 col-sm-12">
-                    <a href="{% url 'exportar_excel' id_tk %}"><i class="fas fa-file-excel mr-auto"></i> Exportar a
-                        Excel</a>
+                    <a href="{% url 'exportar_excel' id_tk %}"><i class="fas fa-file-excel mr-auto"></i> Exportar a Excel</a>
                 </div>
             </div>
         </div>
@@ -81,8 +80,6 @@
                             {% endif %}
                             {% if m.estado == "C" %}
                             Control
-                            {% else %}
-                            Prueba
                             {% endif %}
                         </td>
                         <td>{{m.volumen|floatformat:2}} lts</td>
@@ -95,6 +92,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <a href="{% url 'enviar_data_erp_bun' id_tk %}" class="btn btn-danger">Enviar cantidad al ERP</a>
         </div>
     </div>
 </div>

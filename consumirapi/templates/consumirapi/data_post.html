@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Detalle Data{% endblock titulo %}
+{% block contenido %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Detalle API Rest de Prueba</h1>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-8 col-xl-8 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <h3>{{mensaje}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

@@ -2,7 +2,7 @@
 {% block titulo %}Detalle Tanque{% endblock titulo %}
 {% block contenido %}
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Detalle Tanque {{de_Tk.tag}}</h1>
+    <h1 class="h3 mb-0 text-gray-800">Detalle Tanque {{tanque.tag}}</h1>
 </div>
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-8 col-xl-6 mb-4">
@@ -11,6 +11,7 @@
                 <div class="row no-gutters align-items-center">
                     <ul>
                         <li>Id: <b>{{tanque.id}}</b></li>
+                        <li>Bodega: <b>{{tanque.bodega}}</b></li>
                         <li>Tipo: <b>{{tanque.tipo}}</b></li>
                         <li>Diámetro: <b>{{tanque.diametro}} mm</b></li>
                         <li>Altura: <b>{{tanque.altura_cilindro}} mm</b></li>

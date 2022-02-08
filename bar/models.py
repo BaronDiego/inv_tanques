@@ -20,6 +20,7 @@ class ClaseBase(models.Model):
 
 
 class TanqueBar(ClaseBase):
+    bodega= models.CharField(max_length=10, unique=True, null=True, blank=True)
     tag = models.CharField(max_length=50, unique=True)
     terminal = models.CharField(max_length=20, default="BARRANQUILLA")
     tipo = models.CharField(max_length=150)

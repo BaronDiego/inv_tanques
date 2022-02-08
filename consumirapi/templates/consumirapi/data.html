@@ -10,10 +10,11 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <ul>
-                        {% for d in todos %}
-                            <li>{{d.tanque.tag}} - {{d.lote.referencia}} - {{d.masa|floatformat:"2"}} kg</li>
+                        {% for d in todos.detail%}
+                            Producto:<p> <b>{{d.f120_referencia}}</b></p>
+                            Tanque: <p><b>{{d.f401_id_ubicacion_aux}}</b> </p>
+                            Cantidad: <p> <b>{{d.f401_cant_existencia_1}} Kg</b></p>
                         {% endfor %}
-                            
                     </ul>
                 </div>
             </div>

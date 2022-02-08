@@ -31,7 +31,6 @@
                 <a class="collapse-item border-left-primary" href="{% url 'crear_tanque' %}">Crear Tanque</a>
                 <a class="collapse-item border-left-secondary" href="{% url 'importar' %}">Cargar Tabla de Aforo</a>
                 <a class="collapse-item border-left-success" href="{% url 'crear_lote' %}">Crear Lote</a>
-                <a class="collapse-item border-left-info" href="{% url 'calcular' %}">Medición</a>
                 <a class="collapse-item border-left-warning" href="{% url 'listado_tanques_ope' %}">Tanques Operación
                     Hoy</a>
                 <a class="collapse-item border-left-danger" href="{% url 'listado_tanques' %}">Tanques</a>
@@ -40,7 +39,7 @@
                 <h4 class="collapse-header">Medición:</h4>
                 <a class="collapse-item border-left-info" href="{% url 'calcular' %}">Estandar</a>
                 <a class="collapse-item border-left-info" href="{% url 'calcular_api' %}">API</a>
-                <a class="collapse-item border-left-info" href="{% url 'calcular_pruebas' %}">Estandar Pruebas</a>
+                <a class="collapse-item border-left-info" href="{% url 'calcular_pruebas' %}">Despacho por medición</a>
 
             </div>
         </div>
@@ -59,7 +58,6 @@
                 <a class="collapse-item border-left-primary" href="{% url 'crear_tanque_ctg' %}">Crear Tanque</a>
                 <a class="collapse-item border-left-secondary" href="{% url 'importar_ctg' %}">Cargar Tabla de Aforo</a>
                 <a class="collapse-item border-left-success" href="{% url 'crear_lote_ctg' %}">Crear Lote</a>
-                <a class="collapse-item border-left-info" href="{% url 'calcular_ctg' %}">Medición</a>
                 <a class="collapse-item border-left-warning" href="{% url 'listado_tanques_ope_ctg' %}">Tanques Operación
                     Hoy</a>
                 <a class="collapse-item border-left-danger" href="{% url 'listado_tanques_ctg' %}">Tanques</a>
@@ -68,6 +66,7 @@
                 <h4 class="collapse-header">Medición:</h4>
                 <a class="collapse-item border-left-info" href="{% url 'calcular_ctg' %}">Estandar</a>
                 <a class="collapse-item border-left-info" href="{% url 'calcular_api_ctg' %}">API</a>
+                <a class="collapse-item border-left-info" href="#">Despacho por medición</a>
 
             </div>
         </div>
@@ -86,7 +85,6 @@
                 <a class="collapse-item border-left-primary" href="{% url 'crear_tanque_bar' %}">Crear Tanque</a>
                 <a class="collapse-item border-left-secondary" href="{% url 'importar_bar' %}">Cargar Tabla de Aforo</a>
                 <a class="collapse-item border-left-success" href="{% url 'crear_lote_bar' %}">Crear Lote</a>
-                <a class="collapse-item border-left-info" href="{% url 'calcular_bar' %}">Medición</a>
                 <a class="collapse-item border-left-warning" href="{% url 'listado_tanques_ope_bar' %}">Tanques Operación
                     Hoy</a>
                 <a class="collapse-item border-left-danger" href="{% url 'listado_tanques_bar' %}">Tanques</a>
@@ -95,24 +93,12 @@
                 <h4 class="collapse-header">Medición:</h4>
                 <a class="collapse-item border-left-info" href="{% url 'calcular_bar' %}">Estandar</a>
                 <a class="collapse-item border-left-info" href="{% url 'calcular_api_bar' %}">API</a>
+                <a class="collapse-item border-left-info" href="#">Despacho por medición</a>
 
             </div>
         </div>
     </li>
     <hr class="sidebar-divider">
-    <div class="sidebar-heading"><h6>data api</h6></div>
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse2" aria-expanded="true"
-            aria-controls="collapse2">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Data</span>
-        </a>
-        <div id="collapse2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item border-left-primary" href="{% url 'api_prueba' %}">Pruebas</a>
-            </div>
-        </div>
-    </li>
 
 
     <hr class="sidebar-divider d-none d-md-block">

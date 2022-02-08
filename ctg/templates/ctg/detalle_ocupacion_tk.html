@@ -6,10 +6,6 @@
         <h4 class="m-0 font-weight-bold text-success">Detalle Ocupación Tanque: {{tag}} - {{terminal}}</h4>
     </div>
     <div class="card-body">
-        
-        {% if not mediciones or not volumen_actual_tk or not porcentaje_ocupacion %}
-            <p>No hay información disponible</p>
-        {% else %}
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-8 col-xl-6">
                     <div class="chart-container">
@@ -94,9 +90,8 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                <a href="{% url 'enviar_data_erp_ctg' id_tk %}" class="btn btn-danger">Enviar cantidad al ERP</a>
             </div>
-        {% endif %}
-            
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

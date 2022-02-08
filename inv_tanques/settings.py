@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-f9hpwod$--n8%^l*$-)=m__)mx2aocp6%f+t@2%53$4wdl9(4r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', 'www.algranel.com.co', 'inventarioterminales.algranel.com.co']
 
 
 # Application definition
@@ -83,8 +83,12 @@ WSGI_APPLICATION = 'inv_tanques.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'inv_tanques_db',
+        'USER': 'postgres',
+        'PASSWORD': '!+@Algranel2021',
+        'HOST': 'localhost',
+        'PORT': 5432
     }
 }
 
@@ -126,6 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -137,6 +142,7 @@ LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'panel'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

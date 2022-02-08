@@ -20,4 +20,5 @@ urlpatterns = [
     path('detalle_lote/<pk>/', views.DetalleLote.as_view(), name='detalle_lote_ctg'),
     path('eliminar_lote/<pk>/', views.BorrarLote.as_view(), name='eliminar_lote_ctg'),
     path('calcular_api/', views.crearCalculoApi, name='calcular_api_ctg'),
+    path('enviar_data_erp_ctg/<int:id>/', views.enviar_data_erp, name='enviar_data_erp_ctg'),
 ]
