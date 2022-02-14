@@ -227,7 +227,14 @@ class CrearTanque( SinPrivilegios, CreateView):
 
 @login_required(login_url='login')
 def listado_calculos(request):
-    calculos = Calculo.objects.all()
+    idis_tk = Tanque.objects.all().values_list('id')
+    list_idis = []
+    for id in idis_tk:
+        list_idis.append(id[0])
+    calculos = []
+    for ct in list_idis:
+        qs = Calculo.objects.filter(tanque_id=ct).first()
+        calculos.append(qs)
     return render(request, 'bun/listado_calculo.html', {'calculos':calculos})
 
 

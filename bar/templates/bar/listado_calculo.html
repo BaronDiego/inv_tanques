@@ -11,23 +11,26 @@
                 <thead>
                     <tr class="text-center">
                         <th>Tanque</th>
-                        <th>Volumen</th>
-                        <th>Temperatura TQ</th>
-                        <th>Modificafo</th>
-                        <th>Densidad</th>
+                        <th>Capacidad Tanque</th>
+                        <th>Volumen Actual</th>
+                        <th>% Ocupación</th>
                         <th>Masa Kg</th>
+                        <th>Modificado</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for c in calculos %}
-                        <tr class="text-center">
-                            <td>{{c.tanque}}</td>
-                            <td>{{c.volumen|floatformat:2}}</td>
-                            <td>{{c.temperatura_tq}}</td>
-                            <td>{{c.creado}}</td>
-                            <td>{{c.densidad|floatformat:3}}</td>
-                            <td>{{c.masa|floatformat:2}} Kg</td>
-                        </tr>
+                        {% if not c.volumen %}
+                        {% else %}
+                            <tr class="text-center">
+                                <td>{{c.tanque}}</td>
+                                <td>{{c.tanque.volumen|floatformat:0}}</td>
+                                <td>{{c.volumen|floatformat:2}}</td>
+                                <td>{{c.ocupacion|floatformat:2}}%</td>
+                                <td>{{c.masa|floatformat:2}} Kg</td>
+                                <td>{{c.creado}}</td>
+                            </tr>
+                        {% endif %}
                     {% endfor %}
                 </tbody>
             </table>

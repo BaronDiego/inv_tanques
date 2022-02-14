@@ -86,6 +86,15 @@ class CalculoCtg(ClaseBase):
     densidad = models.FloatField(max_length=8, blank=True, null=True, default=0)
     masa = models.FloatField(max_length=8, blank=True, null=True)
 
+    def ocupacion(self):
+        try:
+            ocupacion = (self.volumen / self.tanque.volumen) * 100
+        except TypeError:
+            ocupacion = 0
+        except ZeroDivisionError:
+            ocupacion = 0
+        return ocupacion
+
 
     class Meta:
         ordering = ['-creado']
