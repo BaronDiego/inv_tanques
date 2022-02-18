@@ -36,7 +36,7 @@ class Tanque(ClaseBase):
         super(Tanque, self).save()
 
     class Meta:
-        ordering = ['-creado']
+        ordering = ['bodega']
 
     def __str__(self):
         return self.tag
