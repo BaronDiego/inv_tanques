@@ -566,3 +566,20 @@ def enviar_data_erp(request, id):
 
     return render(request, 'ctg/data_post.html', {'r':r, 'cantidad':masa_tk_str})
 
+
+@login_required(login_url='login')
+def detalle_tanque_sin_tabla_aforo(request):
+    idis_tk = TanqueCtg.objects.all().values_list('id')
+    list_idis = []
+    for id in idis_tk:
+        list_idis.append(id)
+
+    con_tabla = []
+    for i in list_idis:
+        qs = AforoTanqueCtg.objects.filter(tanque_id=i).first()
+        con_tabla.append(qs)
+    
+    print(con_tabla)
+
+    return render(request, 'ctg/con_tabla.html', {'con_tabla':con_tabla})
+

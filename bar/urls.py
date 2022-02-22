@@ -24,4 +24,5 @@ urlpatterns = [
     path('detalle_ocupacion_tk_pruebas/<int:id>/', views.detalle_ocupacion_tk_pruebas, name='detalle_ocupacion_tk_pruebas_bar'),
     path('listado_tanques_operacion_pruebas/', views.listado_tanques_pruebas, name='listado_tanques_ope_pruebas_bar'),
     path('enviar_data_erp_bar/<int:id>/', views.enviar_data_erp, name='enviar_data_erp_bar'),
+    path('con_tabla/', views.detalle_tanque_sin_tabla_aforo, name='con_tabla_bar'),
 ]

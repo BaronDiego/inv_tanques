@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Listado Volumen Tanques{% endblock titulo %}
+{% block contenido %}
+<div class="card border-left-success shadow h-100">
+    <div class="card-header py-3">
+        <h4 class="m-0 font-weight-bold text-primary">Listado Tanques con Tabla de Aforo</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr class="text-center">
+                        <th>Tanque</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in con_tabla %}
+                        {% if c == None %}
+                        {% else %}
+                        <tr class="text-center">
+                            <td>{{c.tanque}}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
