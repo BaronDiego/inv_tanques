@@ -129,6 +129,39 @@ class CalculoPruebasCtg(ClaseBase):
         super(CalculoPruebasCtg, self).save()
 
 
+class LoteApiCtg(ClaseBase):
+    referencia = models.CharField(max_length=20)
+    producto = models.CharField(max_length=25)
+    temperatura = models.FloatField(max_length=4)
+    api = models.FloatField(max_length=4)
+
+    class Meta:
+        ordering = ['-creado']
+
+    def __str__(self):
+        return "{} - {}".format(self.producto, self.referencia)
+
+    def save(self):
+        self.referencia = self.referencia.upper()
+        self.producto = self.producto.upper()
+        super(LoteApiCtg, self).save()
+
+
+class CalculoApiCtg(ClaseBase):
+    tanque = models.ForeignKey(TanqueCtg, on_delete=models.CASCADE)
+    lote_api = models.ForeignKey(LoteApiCtg, on_delete=models.CASCADE, related_name='lote_api')
+    medicion = models.FloatField(max_length=7, verbose_name="Medición" ,default=0)
+    tabla_6d = models.FloatField(max_length=7)
+    volumen = models.FloatField(max_length=8, blank=True, null=True)
+    masa = models.FloatField(max_length=8, blank=True, null=True)
+    estado = models.CharField(max_length=2, choices=TIPO_MEDIDA)
+    temperatura_tq = models.FloatField(max_length=4, blank=True, null=True)
+    densidad = models.FloatField(max_length=8, blank=True, null=True, default=0)
+
+    class Meta:
+        ordering = ['-creado']
+
+
 
 
 

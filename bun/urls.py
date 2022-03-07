@@ -25,4 +25,7 @@ urlpatterns = [
     path('listado_tanques_operacion_pruebas/', views.listado_tanques_pruebas, name='listado_tanques_ope_pruebas'),
     path('enviar_data_erp_bun/<int:id>/', views.enviar_data_erp, name='enviar_data_erp_bun'),
     path('con_tabla/', views.detalle_tanque_sin_tabla_aforo, name='con_tabla'),
+    path('calculo_api', views.calculoApi, name="calculoApi"),
+    path('crear_lote_api/', views.CrearLoteApi.as_view(), name='crear_lote_api'),
+    path('detalle_ocupacion_tk_api/<int:id>/', views.detalle_ocupacion_tk_api, name='detalle_ocupacion_tk_api'),
 ]
