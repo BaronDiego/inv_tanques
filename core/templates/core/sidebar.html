@@ -31,6 +31,7 @@
 
                 <h6 class="m-1 font-weight-bold text-success">Lotes:</h6>
                 <a class="collapse-item" href="{% url 'crear_lote' %}">Crear Lote</a>
+                <a class="collapse-item" href="{% url 'crear_lote_api' %}">Crear Lote API</a>
                 <a class="collapse-item" href="{% url 'listado_lotes' %}">Lotes</a>
 
                 <h6 class="m-1 font-weight-bold text-success">Medición:</h6>
@@ -43,63 +44,70 @@
     </li>
 
     <hr class="sidebar-divider">
-    <div class="sidebar-heading"><h6>cartagena</h6></div>
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse3" aria-expanded="true"
             aria-controls="collapse3">
             <i class="fas fa-fw fa-cog"></i>
-            <span>Componentes</span>
+            <span>Cartagena</span>
         </a>
         <div id="collapse3" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item border-left-primary" href="{% url 'crear_tanque_ctg' %}">Crear Tanque</a>
-                <a class="collapse-item border-left-secondary" href="{% url 'importar_ctg' %}">Cargar Tabla de Aforo</a>
-                <a class="collapse-item border-left-success" href="{% url 'crear_lote_ctg' %}">Crear Lote</a>
-                <a class="collapse-item border-left-warning" href="{% url 'listado_tanques_ope_ctg' %}">Tanques Operación
-                    Hoy</a>
-                <a class="collapse-item border-left-danger" href="{% url 'listado_tanques_ctg' %}">Tanques</a>
-                <a class="collapse-item border-left-primary" href="{% url 'listado_calculos_ctg' %}">Ocupación Tanques</a>
-                <a class="collapse-item border-left-secondary" href="{% url 'listado_lotes_ctg' %}">Lotes</a>
-                <a class="collapse-item border-left-success" href="{% url 'con_tabla_ctg' %}">Tanques con tabla Aforo</a>
-                <h4 class="collapse-header">Medición:</h4>
-                <a class="collapse-item border-left-info" href="{% url 'calcular_ctg' %}">Estandar</a>
-                <a class="collapse-item border-left-info" href="{% url 'calcular_api_ctg' %}">API</a>
-                <a class="collapse-item border-left-info" href="{% url 'calcular_pruebas_ctg' %}">Despacho por medición</a>
+                <h6 class="m-1 font-weight-bold text-success">Tanques:</h6>
+                <a class="collapse-item" href="{% url 'crear_tanque_ctg' %}">Crear Tanque</a>
+                <a class="collapse-item" href="{% url 'listado_tanques_ope_ctg' %}">Tanques Operación Hoy</a>
+                <a class="collapse-item" href="{% url 'listado_tanques_ctg' %}">Lista Tanques</a>
+                <a class="collapse-item" href="{% url 'listado_calculos_ctg' %}">Ocupación Tanques</a>
+
+                <h6 class="m-1 font-weight-bold text-success">Tabla Aforo:</h6>
+                <a class="collapse-item" href="{% url 'importar_ctg' %}">Cargar Tabla de Aforo</a>
+                <a class="collapse-item" href="{% url 'con_tabla_ctg' %}">Tanques con tabla Aforo</a>
+
+                <h6 class="m-1 font-weight-bold text-success">Lotes:</h6>
+                <a class="collapse-item" href="{% url 'crear_lote_ctg' %}">Crear Lote</a>
+                <a class="collapse-item" href="{% url 'crear_lote_api_ctg' %}">Crear Lote API</a>
+                <a class="collapse-item" href="{% url 'listado_lotes_ctg' %}">Lotes</a>
+
+               <h6 class="m-1 font-weight-bold text-success">Medición:</h6>
+                <a class="collapse-item" href="{% url 'calcular_ctg' %}">Estandar</a>
+                <a class="collapse-item" href="{% url 'calculoApi_ctg' %}">API</a>
+                <a class="collapse-item" href="{% url 'calcular_pruebas_ctg' %}">Despacho por medición</a>
 
             </div>
         </div>
     </li>
 
     <hr class="sidebar-divider">
-    <div class="sidebar-heading"><h6>barranquilla</h6></div>
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse1" aria-expanded="true"
             aria-controls="collapse1">
             <i class="fas fa-fw fa-cog"></i>
-            <span>Componentes</span>
+            <span>Barranquilla</span>
         </a>
         <div id="collapse1" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item border-left-primary" href="{% url 'crear_tanque_bar' %}">Crear Tanque</a>
-                <a class="collapse-item border-left-secondary" href="{% url 'importar_bar' %}">Cargar Tabla de Aforo</a>
-                <a class="collapse-item border-left-success" href="{% url 'crear_lote_bar' %}">Crear Lote</a>
-                <a class="collapse-item border-left-warning" href="{% url 'listado_tanques_ope_bar' %}">Tanques Operación
-                    Hoy</a>
-                <a class="collapse-item border-left-danger" href="{% url 'listado_tanques_bar' %}">Tanques</a>
-                <a class="collapse-item border-left-primary" href="{% url 'listado_calculos_bar' %}">Ocupación Tanques</a>
-                <a class="collapse-item border-left-secondary" href="{% url 'listado_lotes_bar' %}">Lotes</a>
-                <a class="collapse-item border-left-success" href="{% url 'con_tabla_bar' %}">Tanques con tabla Aforo</a>
-                <h4 class="collapse-header">Medición:</h4>
-                <a class="collapse-item border-left-info" href="{% url 'calcular_bar' %}">Estandar</a>
-                <a class="collapse-item border-left-info" href="{% url 'calcular_api_bar' %}">API</a>
-                <a class="collapse-item border-left-info" href="{% url 'calcular_pruebas_bar' %}">Despacho por medición</a>
+                <h6 class="m-1 font-weight-bold text-success">Tanques:</h6>
+                <a class="collapse-item" href="{% url 'crear_tanque_bar' %}">Crear Tanque</a>
+                <a class="collapse-item" href="{% url 'listado_tanques_ope_bar' %}">Tanques Operación Hoy</a>
+                <a class="collapse-item" href="{% url 'listado_tanques_bar' %}">Lista Tanques</a>
+                <a class="collapse-item" href="{% url 'listado_calculos_bar' %}">Ocupación Tanques</a>
+
+                <h6 class="m-1 font-weight-bold text-success">Tabla Aforo:</h6>
+                <a class="collapse-item" href="{% url 'importar_bar' %}">Cargar Tabla de Aforo</a>
+                <a class="collapse-item" href="{% url 'con_tabla_bar' %}">Tanques con tabla Aforo</a>
+
+                <h6 class="m-1 font-weight-bold text-success">Lotes:</h6>
+                <a class="collapse-item" href="{% url 'crear_lote_bar' %}">Crear Lote</a>
+                <a class="collapse-item" href="{% url 'crear_lote_api_bar' %}">Crear Lote API</a>
+                <a class="collapse-item" href="{% url 'listado_lotes_bar' %}">Lotes</a>
+
+                <h6 class="m-1 font-weight-bold text-success">Medición:</h6>
+                <a class="collapse-item" href="{% url 'calcular_bar' %}">Estandar</a>
+                <a class="collapse-item" href="{% url 'calculoApi_bar' %}">API</a>
+                <a class="collapse-item" href="{% url 'calcular_pruebas_bar' %}">Despacho por medición</a>
 
             </div>
         </div>
     </li>
-    <hr class="sidebar-divider">
-
-
     <hr class="sidebar-divider d-none d-md-block">
 
     <!-- Sidebar Toggler (Sidebar) -->

@@ -13,9 +13,9 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Subquery
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import AforoTanqueCtg, CalculoCtg, TanqueCtg, LoteCtg, CalculoPruebasCtg
+from .models import AforoTanqueCtg, CalculoCtg, TanqueCtg, LoteCtg, CalculoPruebasCtg, LoteApiCtg, CalculoApiCtg
 from .resources import AforoTanqueResourse
-from .forms import CalculoForm, TanqueForm, LoteForm, CalculoForm2, CalculoFormPruebasCtg
+from .forms import CalculoForm, TanqueForm, LoteForm, CalculoForm2, CalculoFormPruebasCtg, LoteApiFormCtg, CalculoApiFormCtg
 from core.views import SinPrivilegios
 import django_excel as excel
 import locale
@@ -182,8 +182,10 @@ class BorrarTanque( SuccessMessageMixin, SinPrivilegios, DeleteView):
 def listado_tanques(request):
     qs_1 = CalculoCtg.objects.filter(creado__gte=date.today())
     qs_2 = TanqueCtg.objects.filter(id__in=Subquery(qs_1.values('tanque_id'))).values()
+    qs_3 = CalculoApiCtg.objects.filter(creado__gte=date.today())
+    qs_4 = TanqueCtg.objects.filter(id__in=Subquery(qs_3.values('tanque_id'))).values()
     hoy = date.today()
-    return render(request, 'ctg/listado_tanque_operacion.html', {'qs_2':qs_2, 'hoy':hoy})
+    return render(request, 'ctg/listado_tanque_operacion.html', {'qs_2':qs_2, 'qs_4':qs_4, 'hoy':hoy})
 
 
 class CrearTanque( SinPrivilegios, CreateView):
@@ -582,4 +584,116 @@ def detalle_tanque_sin_tabla_aforo(request):
     print(con_tabla)
 
     return render(request, 'ctg/con_tabla.html', {'con_tabla':con_tabla})
+
+
+@login_required(login_url='login')
+@permission_required('ctg.add_calculoapictg', login_url='sin_privilegios')
+def calculoApiCtg(request):
+    if request.method == 'POST':
+        form = CalculoApiFormCtg(data=request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            if cd['medicion'] == None:
+                cd['medicion'] = 0
+            medicion = cd['medicion']
+            tabla_6d = cd['tabla_6d']
+
+            tanque = TanqueCtg.objects.filter(id=request.POST['tanque']).values()
+            lote = LoteApiCtg.objects.filter(id=request.POST['lote_api']).values()
+            altura_medicion_tanque = tanque[0]['altura_medicion']
+            temperatura = lote[0]['temperatura']
+            api = lote[0]['api']
+
+
+            if medicion > altura_medicion_tanque:
+                messages.error(request ,"La medición es mayor que la altura de medición estabelecida")
+
+            id_tanque = tanque[0]['id']
+            medicion_aforo = AforoTanqueCtg.objects.filter(tanque_id=id_tanque, nivel=medicion).values()
+
+            form.instance.volumen = medicion_aforo[0]['medicion']
+            galones = form.instance.volumen * 0.264172
+            masa1 = galones * tabla_6d
+            tabla13 = ((141.3819577/(api + 131.5)) - 0.001199407795) * 3.785411784
+            form.instance.masa = masa1 * tabla13
+            form.instance.densidad = form.instance.masa / form.instance.volumen
+            form.instance.uc = request.user
+            form.save()
+            return redirect('listado_tanques_ope')
+    else:
+        form = CalculoApiFormCtg()
+        return render(request, 'ctg/calcularApi.html', {'form':form})
+
+
+class CrearLoteApiCtg(SinPrivilegios, CreateView):
+    permission_required = 'ctg.add_loteapictg'
+    model = LoteApiCtg
+    template_name = 'ctg/crear_lote_api.html'
+    success_url = reverse_lazy('listado_lotes')
+    form_class = LoteApiFormCtg
+
+    def form_valid(self, form):
+        form.instance.uc = self.request.user
+        return super().form_valid(form)
+
+
+@login_required(login_url='login')
+def detalle_ocupacion_tk_api_ctg(request, id):
+    calculo = CalculoApiCtg.objects.filter(tanque_id=id).order_by('-creado')[:2]
+    if calculo == "" or calculo == 0:
+        calculo = 0
+    calculo_tk = CalculoApiCtg.objects.filter(tanque_id=id).order_by('-creado').values()[:1]
+    if calculo_tk == "":
+        calculo_tk = 0
+    # volumen_actual_tk = calculo_tk[0]['volumen']
+    try:
+        volumen_actual_tk = calculo_tk[0]['volumen']
+        ultima_medicion = calculo_tk[0]['creado']
+        calculo_lote = calculo_tk[0]['lote_api_id']
+        tipo_medicion = calculo_tk[0]['estado']
+    except IndexError:
+        volumen_actual_tk = 0
+        ultima_medicion = 0
+        calculo_lote = 0
+    
+    lote = LoteCtg.objects.filter(id=calculo_lote).values()
+    try:
+        lote_producto = lote[0]['producto']
+        lote_refencia = lote[0]['referencia']
+        masa_tk = calculo_tk[0]['masa']
+        # lote_buque = lote[0]['nombre_buque']
+    except IndexError:
+        lote_producto = 0
+        masa_tk = 0
+
+    tanque = TanqueCtg.objects.filter(id=id).values()
+    tag = tanque[0]['tag']
+    id_tk = tanque[0]['id']
+    volumen_total_tk = tanque[0]['volumen']
+    data = [volumen_total_tk, volumen_actual_tk]
+    terminal = tanque[0]['terminal']
+    bodega = tanque[0]['bodega']
+
+
+    try:
+        porcentaje_ocupacion = (volumen_actual_tk / volumen_total_tk) * 100
+    except TypeError:
+        porcentaje_ocupacion = 0
+    
+
+    return render(request, 'ctg/detalle_ocupacion_tk_api.html', {
+        'mediciones':calculo, 
+        'volumen_total_tk':volumen_total_tk,
+        'volumen_actual_tk':volumen_actual_tk,
+        'lote_producto':lote_producto,
+        'masa_tk':masa_tk,
+        'data':data,
+        'tag':tag,
+        'ultima_medicion':ultima_medicion,
+        'porcentaje_ocupacion':porcentaje_ocupacion,
+        'id_tk':id_tk,
+        'lote_refencia':lote_refencia,
+        'tipo_medicion':tipo_medicion,
+        'terminal':terminal
+        })
 
