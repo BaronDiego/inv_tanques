@@ -157,6 +157,6 @@ REST_FRAMEWORK = {
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'djangopruebas7@gmail.com'
-EMAIL_HOST_PASSWORD = 'DiegO190706-'
+EMAIL_HOST_PASSWORD = 'atzdcrbphhfnqrrf'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
