@@ -84,9 +84,9 @@ WSGI_APPLICATION = 'inv_tanques.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'inv_tanques_db',
+        'NAME': '',
         'USER': 'postgres',
-        'PASSWORD': '!+@Algranel2021',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': 5432
     }
@@ -157,6 +157,6 @@ REST_FRAMEWORK = {
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'djangopruebas7@gmail.com'
-EMAIL_HOST_PASSWORD = 'atzdcrbphhfnqrrf'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
