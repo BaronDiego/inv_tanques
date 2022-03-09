@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-f9hpwod$--n8%^l*$-)=m__)mx2aocp6%f+t@2%53$4wdl9(4r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', 'www.algranel.com.co', 'inventarioterminales.algranel.com.co']
 
@@ -84,9 +84,9 @@ WSGI_APPLICATION = 'inv_tanques.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
+        'NAME': 'inv_tanques_db',
         'USER': 'postgres',
-        'PASSWORD': '',
+        'PASSWORD': '!+@Algranel2021',
         'HOST': 'localhost',
         'PORT': 5432
     }
@@ -157,6 +157,6 @@ REST_FRAMEWORK = {
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'djangopruebas7@gmail.com'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = 'atzdcrbphhfnqrrf'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
