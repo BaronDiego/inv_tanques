@@ -3,10 +3,10 @@
 {% block contenido %}
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Listado de Lotes </h1>
-    <form class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action="{% url 'buscar_lote_ctg' %}">
+    <form class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action="{% url 'buscar_lote_api_bar' %}">
         {% csrf_token %}
         <div class="input-group">
-            <input type="text" class="form-control bg-white border-1 small" placeholder="Buscar lote"
+            <input type="text" class="form-control bg-white border-1 small" placeholder="Buscar lote api"
                 aria-label="Search" aria-describedby="basic-addon2" name="q" value="{{query}}">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="submit">
@@ -18,14 +18,14 @@
 </div>
 <div class="row">
     
-    {% if lotes_list %}
-        {% for l in lotes_list %}
+    {% if lotes_list_api %}
+        {% for l in lotes_list_api %}
             <div class="col-sm-12 col-xl-3 col-md-4 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="h3 mb-0 font-weight-bold text-gray-800"><a href="{% url 'detalle_lote_ctg' l.pk %}">{{l.referencia}} - {{l.producto}}</a></div>
+                                <div class="h3 mb-0 font-weight-bold text-gray-800"><a href="{% url 'detalle_lote_api_bar' l.pk %}">{{l.referencia}} - {{l.producto}}</a></div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-warehouse fa-2x text-gray-300"></i>

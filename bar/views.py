@@ -4,6 +4,7 @@ from tablib import Dataset
 import tablib
 from requests import post
 import json
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
@@ -336,6 +337,14 @@ def exportar_excel(request, id):
             d.estado = 'Definitiva'
         elif d.estado == 'F':
             d.estado = 'Final'
+        elif d.estado == 'ID':
+            d.estado = 'Inicial Despacho'
+        elif d.estado == 'IR':
+            d.estado = 'Inicial Recibo'
+        elif d.estado == 'FD':
+            d.estado = 'Final Despacho'
+        elif d.estado == 'FR':
+            d.estado = 'Final Recibo'
         else:
             d.estado = 'Inicial'
 
@@ -633,6 +642,40 @@ class CrearLoteApiBar(SinPrivilegios, CreateView):
         form.instance.uc = self.request.user
         return super().form_valid(form)
 
+class ListadoLoteApiBar(SinPrivilegios, ListView):
+    permission_required = 'bun.view_loteapi'
+    model = LoteApiBar
+    template_name = 'bar/listado_lotes_api.html'
+    context_object_name = 'lotes_list_api'
+
+class DetalleLoteApiBar(SinPrivilegios, DetailView):
+    permission_required = 'bun.view_loteapi'
+    model = LoteApiBar
+    template_name = 'bar/detalle_lote_api.html'
+    context_object_name = 'de_Lt_api'
+
+class EditarLoteApiBar(SuccessMessageMixin, SinPrivilegios, UpdateView):
+    permission_required = 'bun.change_loteapi'
+    model = LoteApiBar
+    form_class = LoteApiFormBar
+    template_name = 'bar/editar_lote_api.html'
+    context_object_name = 'lote_editar'
+    success_url = reverse_lazy('listado_lotes_api')
+    success_message = "Lote editado correctamente"
+
+    def form_valid(self, form):
+        form.instance.um = self.request.user.id
+        return super().form_valid(form)
+
+
+class BorrarLoteApiBar( SuccessMessageMixin, SinPrivilegios, DeleteView):
+    permission_required = 'bun.delete_loteapi'
+    model = LoteApiBar
+    template_name = 'bar/borrar_lote_api.html'
+    context_object_name = 'obj'
+    success_url = reverse_lazy('listado_lotes_api')
+    success_message = "Lote elimiando satisfactoriamente"
+
 
 @login_required(login_url='login')
 def detalle_ocupacion_tk_api_bar(request, id):
@@ -692,5 +735,90 @@ def detalle_ocupacion_tk_api_bar(request, id):
         'lote_refencia':lote_refencia,
         'tipo_medicion':tipo_medicion,
         'terminal':terminal
+        })
+
+def exportar_excel_api(request, id):
+    export = []
+
+    export.append(['Fecha', 'Tipo Medición','Medicion','Temperatua','Volumen', 'Densidad', 'Masa','Lote-Api', 'Operador']) #SellosValvulas - SellosTapas
+    data = CalculoApiBar.objects.filter(tanque_id=id)
+    tanque = TanqueBar.objects.filter(id=id).values()
+    tag = tanque[0]['tag']
+
+
+    for d in data:
+        if d.estado == 'C':
+            d.estado = 'Control'
+        elif d.estado == 'D':
+            d.estado = 'Definitiva'
+        elif d.estado == 'F':
+            d.estado = 'Final'
+        elif d.estado == 'ID':
+            d.estado = 'Inicial Despacho'
+        elif d.estado == 'IR':
+            d.estado = 'Inicial Recibo'
+        elif d.estado == 'FD':
+            d.estado = 'Final Despacho'
+        elif d.estado == 'FR':
+            d.estado = 'Final Recibo'
+        else:
+            d.estado = 'Inicial'
+
+
+        try:
+            export.append([
+                "{0:%Y-%m-%d}".format(d.creado),
+                d.estado.upper(),
+                d.medicion,
+                d.temperatura_tq,
+                "{:,.2f}".format(d.volumen).replace(",", "@").replace(".", ",").replace("@", "."),
+                d.densidad,
+                "{:,.2f}".format(d.masa).replace(",", "@").replace(".", ",").replace("@", "."),
+                d.lote_api.producto.upper(),
+                d.uc.username.upper(),
+            ])
+        except AttributeError:
+          return redirect('listado_tanques')
+
+    today    = datetime.now()
+    strToday = today.strftime("%Y%m%d")
+    sheet = excel.pe.Sheet(export)
+
+    return excel.make_response(sheet, "xlsx", file_name="dataApi"+tag+"_"+strToday+".xlsx")
+
+
+
+def buscar_lote(request):
+    q = request.GET.get('q', '')
+    querys = (Q(referencia__icontains=q ) | Q(producto__icontains=q))
+    lotes = LoteBar.objects.filter(querys)
+    cantidad = lotes.count()
+    return render(request, 'bar/buscar_lote.html', {
+        'lotes':lotes, 
+        'cantidad':cantidad,
+        'q':q
+        })
+
+def buscar_tanque(request):
+    q = request.GET.get('q', '')
+    querys = (Q(bodega__icontains=q ) | Q(tag__icontains=q))
+    tanques = TanqueBar.objects.filter(querys)
+    cantidad = tanques.count()
+    return render(request, 'bar/buscar_tanque.html', {
+        'tanques':tanques, 
+        'cantidad':cantidad,
+        'q':q
+        })
+
+
+def buscar_lote_api(request):
+    q = request.GET.get('q', '')
+    querys = (Q(referencia__icontains=q ) | Q(producto__icontains=q))
+    lotes = LoteApiBar.objects.filter(querys)
+    cantidad = lotes.count()
+    return render(request, 'bar/buscar_lote_api.html', {
+        'lotes':lotes, 
+        'cantidad':cantidad,
+        'q':q
         })
 

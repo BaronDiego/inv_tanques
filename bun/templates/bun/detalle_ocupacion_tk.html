@@ -76,6 +76,18 @@
                             {% if m.estado == "D" %}
                             Definitivo
                             {% endif %}
+                            {% if m.estado == "ID" %}
+                            Inicial Despacho
+                            {% endif %}
+                            {% if m.estado == "IR" %}
+                            Inicial Recibo
+                            {% endif %}
+                            {% if m.estado == "FD" %}
+                            Final Despacho
+                            {% endif %}
+                            {% if m.estado == "FR" %}
+                            Final Recibo
+                            {% endif %}
                             {% if m.estado == "C" %}
                             Control
                             {% endif %}

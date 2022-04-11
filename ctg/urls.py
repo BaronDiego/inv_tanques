@@ -28,4 +28,12 @@ urlpatterns = [
     path('calculo_api', views.calculoApiCtg, name="calculoApi_ctg"),
     path('crear_lote_api/', views.CrearLoteApiCtg.as_view(), name='crear_lote_api_ctg'),
     path('detalle_ocupacion_tk_api/<int:id>/', views.detalle_ocupacion_tk_api_ctg, name='detalle_ocupacion_tk_api_ctg'),
+    path('exportar_excel_api/<int:id>/', views.exportar_excel_api, name='exportar_excel_api_ctg'),
+    path('listado_lotes_api/', views.ListadoLoteApiCtg.as_view(), name='listado_lotes_api_ctg'),
+    path('detalle_lote_api/<pk>/', views.DetalleLoteApiCtg.as_view(), name='detalle_lote_api_ctg'),
+    path('buscar_lote', views.buscar_lote, name='buscar_lote_ctg'),
+    path('buscar_tanque', views.buscar_tanque, name='buscar_tanque_ctg'),
+    path('buscar_lote_api', views.buscar_lote_api, name='buscar_lote_api_ctg'),
+    path('editar_lote_api/<pk>/', views.EditarLoteApiCtg.as_view(), name='editar_lote_api_ctg'),
+    path('eliminar_lote_api/<pk>/', views.BorrarLoteApiCtg.as_view(), name='eliminar_lote_api_ctg'),
 ]

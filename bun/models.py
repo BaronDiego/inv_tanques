@@ -7,6 +7,10 @@ TIPO_MEDIDA = (
     ('I', 'INICIAL'),
     ('C', 'CONTROL'),
     ('D', 'DEFINITIVA'),
+    ('ID', 'INICAL DESPACHO'),
+    ('IR', 'INICIAL RECIBO'),
+    ('FD', 'FINAL DESPACHO'),
+    ('FR', 'FINAL RECIBO'),
 )
 
 class ClaseBase(models.Model):
@@ -58,6 +62,7 @@ class Lote(ClaseBase):
     factor_correccion = models.FloatField(max_length=6, blank=True, null=True, verbose_name="Factor corrección")
     nombre_buque = models.CharField(max_length=50, blank=True, null=True)
     fecha_llegada_buque = models.DateField(blank=True, null=True)
+    cliente = models.CharField(max_length=100, blank=True, null=True, default="-")
 
     class Meta:
         ordering = ['-creado']
@@ -133,6 +138,7 @@ class LoteApi(ClaseBase):
     producto = models.CharField(max_length=25)
     temperatura = models.FloatField(max_length=4)
     api = models.FloatField(max_length=4)
+    cliente = models.CharField(max_length=100, blank=True, null=True, default="-")
 
     class Meta:
         ordering = ['-creado']

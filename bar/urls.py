@@ -28,4 +28,12 @@ urlpatterns = [
     path('calculo_api', views.calculoApiBar, name="calculoApi_bar"),
     path('crear_lote_api/', views.CrearLoteApiBar.as_view(), name='crear_lote_api_bar'),
     path('detalle_ocupacion_tk_api/<int:id>/', views.detalle_ocupacion_tk_api_bar, name='detalle_ocupacion_tk_api_bar'),
+    path('exportar_excel_api/<int:id>/', views.exportar_excel_api, name='exportar_excel_api_bar'),
+    path('listado_lotes_api/', views.ListadoLoteApiBar.as_view(), name='listado_lotes_api_bar'),
+    path('detalle_lote_api/<pk>/', views.DetalleLoteApiBar.as_view(), name='detalle_lote_api_bar'),
+    path('buscar_lote', views.buscar_lote, name='buscar_lote_bar'),
+    path('buscar_tanque', views.buscar_tanque, name='buscar_tanque_bar'),
+    path('buscar_lote_api', views.buscar_lote_api, name='buscar_lote_api_bar'),
+    path('editar_lote_api/<pk>/', views.EditarLoteApiBar.as_view(), name='editar_lote_api_bar'),
+    path('eliminar_lote_api/<pk>/', views.BorrarLoteApiBar.as_view(), name='eliminar_lote_api_bar'),
 ]

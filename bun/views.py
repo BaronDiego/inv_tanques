@@ -367,6 +367,14 @@ def exportar_excel(request, id):
             d.estado = 'Definitiva'
         elif d.estado == 'F':
             d.estado = 'Final'
+        elif d.estado == 'ID':
+            d.estado = 'Inicial Despacho'
+        elif d.estado == 'IR':
+            d.estado = 'Inicial Recibo'
+        elif d.estado == 'FD':
+            d.estado = 'Final Despacho'
+        elif d.estado == 'FR':
+            d.estado = 'Final Recibo'
         else:
             d.estado = 'Inicial'
 
@@ -813,6 +821,14 @@ def exportar_excel_api(request, id):
             d.estado = 'Definitiva'
         elif d.estado == 'F':
             d.estado = 'Final'
+        elif d.estado == 'ID':
+            d.estado = 'Inicial Despacho'
+        elif d.estado == 'IR':
+            d.estado = 'Inicial Recibo'
+        elif d.estado == 'FD':
+            d.estado = 'Final Despacho'
+        elif d.estado == 'FR':
+            d.estado = 'Final Recibo'
         else:
             d.estado = 'Inicial'
 
