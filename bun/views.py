@@ -14,6 +14,7 @@ from django.db.models import Subquery
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
+from django.db.models import Q
 from .models import AforoTanque, Calculo, Tanque, Lote, CalculoPruebas, LoteApi, CalculoApi
 from .resources import AforoTanqueResourse
 from .forms import CalculoForm, TanqueForm, LoteForm, CalculoForm2, CalculoFormPruebas, LoteApiForm, CalculoApiForm
@@ -651,6 +652,41 @@ def calculoApi(request):
         form = CalculoApiForm()
         return render(request, 'bun/calcularApi.html', {'form':form})
 
+    if request.method == 'POST':
+        form = CalculoApiForm(data=request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            if cd['medicion'] == None:
+                cd['medicion'] = 0
+            medicion = cd['medicion']
+            tabla_6d = cd['tabla_6d']
+
+            tanque = Tanque.objects.filter(id=request.POST['tanque']).values()
+            lote = LoteApi.objects.filter(id=request.POST['lote_api']).values()
+            altura_medicion_tanque = tanque[0]['altura_medicion']
+            temperatura = lote[0]['temperatura']
+            api = lote[0]['api']
+
+
+            if medicion > altura_medicion_tanque:
+                messages.error(request ,"La medición es mayor que la altura de medición estabelecida")
+
+            id_tanque = tanque[0]['id']
+            medicion_aforo = AforoTanque.objects.filter(tanque_id=id_tanque, nivel=medicion).values()
+
+            form.instance.volumen = medicion_aforo[0]['medicion']
+            galones = form.instance.volumen * 0.264172
+            masa1 = galones * tabla_6d
+            tabla13 = ((141.3819577/(api + 131.5)) - 0.001199407795) * 3.785411784
+            form.instance.masa = masa1 * tabla13
+            form.instance.densidad = form.instance.masa / form.instance.volumen
+            form.instance.uc = request.user
+            form.save()
+            return redirect('listado_tanques_ope')
+    else:
+        form = CalculoApiForm()
+        return render(request, 'bun/calcularApi.html', {'form':form})
+
 
 class CrearLoteApi(SinPrivilegios, CreateView):
     permission_required = 'bun.add_loteapi'
@@ -662,6 +698,42 @@ class CrearLoteApi(SinPrivilegios, CreateView):
     def form_valid(self, form):
         form.instance.uc = self.request.user
         return super().form_valid(form)
+
+class ListadoLoteApi(SinPrivilegios, ListView):
+    permission_required = 'bun.view_loteapi'
+    model = LoteApi
+    template_name = 'bun/listado_lotes_api.html'
+    context_object_name = 'lotes_list_api'
+
+class DetalleLoteApi(SinPrivilegios, DetailView):
+    permission_required = 'bun.view_loteapi'
+    model = LoteApi
+    template_name = 'bun/detalle_lote_api.html'
+    context_object_name = 'de_Lt_api'
+
+class EditarLoteApi(SuccessMessageMixin, SinPrivilegios, UpdateView):
+    permission_required = 'bun.change_loteapi'
+    model = LoteApi
+    form_class = LoteApiForm
+    template_name = 'bun/editar_lote_api.html'
+    context_object_name = 'lote_editar'
+    success_url = reverse_lazy('listado_lotes_api')
+    success_message = "Lote editado correctamente"
+
+    def form_valid(self, form):
+        form.instance.um = self.request.user.id
+        return super().form_valid(form)
+
+
+class BorrarLoteApi( SuccessMessageMixin, SinPrivilegios, DeleteView):
+    permission_required = 'bun.delete_loteapi'
+    model = LoteApi
+    template_name = 'bun/borrar_lote_api.html'
+    context_object_name = 'obj'
+    success_url = reverse_lazy('listado_lotes_api')
+    success_message = "Lote elimiando satisfactoriamente"
+
+
 
 
 @login_required(login_url='login')
@@ -683,7 +755,7 @@ def detalle_ocupacion_tk_api(request, id):
         ultima_medicion = 0
         calculo_lote = 0
     
-    lote = Lote.objects.filter(id=calculo_lote).values()
+    lote = LoteApi.objects.filter(id=calculo_lote).values()
     try:
         lote_producto = lote[0]['producto']
         lote_refencia = lote[0]['referencia']
@@ -722,4 +794,82 @@ def detalle_ocupacion_tk_api(request, id):
         'lote_refencia':lote_refencia,
         'tipo_medicion':tipo_medicion,
         'terminal':terminal
+        })
+
+
+def exportar_excel_api(request, id):
+    export = []
+
+    export.append(['Fecha', 'Tipo Medición','Medicion','Temperatua','Volumen', 'Densidad', 'Masa','Lote-Api', 'Operador']) #SellosValvulas - SellosTapas
+    data = CalculoApi.objects.filter(tanque_id=id)
+    tanque = Tanque.objects.filter(id=id).values()
+    tag = tanque[0]['tag']
+
+
+    for d in data:
+        if d.estado == 'C':
+            d.estado = 'Control'
+        elif d.estado == 'D':
+            d.estado = 'Definitiva'
+        elif d.estado == 'F':
+            d.estado = 'Final'
+        else:
+            d.estado = 'Inicial'
+
+
+        try:
+            export.append([
+                "{0:%Y-%m-%d}".format(d.creado),
+                d.estado.upper(),
+                d.medicion,
+                d.temperatura_tq,
+                "{:,.2f}".format(d.volumen).replace(",", "@").replace(".", ",").replace("@", "."),
+                d.densidad,
+                "{:,.2f}".format(d.masa).replace(",", "@").replace(".", ",").replace("@", "."),
+                d.lote_api.producto.upper(),
+                d.uc.username.upper(),
+            ])
+        except AttributeError:
+          return redirect('listado_tanques')
+
+    today    = datetime.now()
+    strToday = today.strftime("%Y%m%d")
+    sheet = excel.pe.Sheet(export)
+
+    return excel.make_response(sheet, "xlsx", file_name="dataApi"+tag+"_"+strToday+".xlsx")
+
+
+
+def buscar_lote(request):
+    q = request.GET.get('q', '')
+    querys = (Q(referencia__icontains=q ) | Q(producto__icontains=q))
+    lotes = Lote.objects.filter(querys)
+    cantidad = lotes.count()
+    return render(request, 'bun/buscar_lote.html', {
+        'lotes':lotes, 
+        'cantidad':cantidad,
+        'q':q
+        })
+
+def buscar_tanque(request):
+    q = request.GET.get('q', '')
+    querys = (Q(bodega__icontains=q ) | Q(tag__icontains=q))
+    tanques = Tanque.objects.filter(querys)
+    cantidad = tanques.count()
+    return render(request, 'bun/buscar_tanque.html', {
+        'tanques':tanques, 
+        'cantidad':cantidad,
+        'q':q
+        })
+
+
+def buscar_lote_api(request):
+    q = request.GET.get('q', '')
+    querys = (Q(referencia__icontains=q ) | Q(producto__icontains=q))
+    lotes = LoteApi.objects.filter(querys)
+    cantidad = lotes.count()
+    return render(request, 'bun/buscar_lote_api.html', {
+        'lotes':lotes, 
+        'cantidad':cantidad,
+        'q':q
         })

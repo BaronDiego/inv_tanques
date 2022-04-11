@@ -46,7 +46,7 @@
                     <h4 class="m-0 font-weight-bold text-success">Control de Mediciones</h4>
                 </div>
                 <div class="col-md-2 col-sm-12">
-                    <a href="{% url 'exportar_excel' id_tk %}"><i class="fas fa-file-excel mr-auto"></i> Exportar a
+                    <a href="{% url 'exportar_excel_api' id_tk %}"><i class="fas fa-file-excel mr-auto"></i> Exportar a
                         Excel</a>
                 </div>
             </div>
@@ -95,8 +95,8 @@
                         </td>
                         <td>{{m.densidad|floatformat:5}}</td>
                         <td>{{m.masa|floatformat:2}} Kg</td>
-                        <td>{{m.lote}}</td>
-                        <td>{{m.uc}}</td>
+                        <td>{{m.lote_api}}</td>
+                        <td>{{m.uc.first_name}} {{m.uc.last_name}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -1,13 +1,12 @@
 {% extends 'core/base.html' %}
-{% load static %}
-{% block titulo %}Listado Tanques{% endblock titulo %}
+{% block titulo %}Listado Lotes{% endblock titulo %}
 {% block contenido %}
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Listado Total de Tanques </h1>
-    <form class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action="{% url 'buscar_tanque' %}">
+    <h1 class="h3 mb-0 text-gray-800">Listado de Lotes </h1>
+    <form class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action="{% url 'buscar_lote_api' %}">
         {% csrf_token %}
         <div class="input-group">
-            <input type="text" class="form-control bg-white border-1 small" placeholder="Buscar tanque"
+            <input type="text" class="form-control bg-white border-1 small" placeholder="Buscar lote api"
                 aria-label="Search" aria-describedby="basic-addon2" name="q" value="{{query}}">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="submit">
@@ -19,19 +18,17 @@
 </div>
 <div class="row">
     
-    {% if tanques_list %}
-        {% for t in tanques_list %}
+    {% if lotes_list_api %}
+        {% for l in lotes_list_api %}
             <div class="col-sm-12 col-xl-3 col-md-4 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                   Tanque</div>
-                                <div class="h3 mb-0 font-weight-bold text-gray-800"><a href="{% url 'detalle_tanque' t.id %}">{{t.tag}}</a></div>
+                                <div class="h3 mb-0 font-weight-bold text-gray-800"><a href="{% url 'detalle_lote_api' l.pk %}">{{l.referencia}} - {{l.producto}}</a></div>
                             </div>
-                            <div class="col ml-auto">
-                                <img src="{% static 'img/tanque2.png' %}" style="max-width:30%" class="img-fluid">
+                            <div class="col-auto">
+                                <i class="fas fa-warehouse fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>
@@ -39,7 +36,7 @@
             </div>
         {% endfor %}
     {% else %}
-            <p>Aún no se han creado tanques.</p>
+            <p>Aún no se han creado lotes.</p>
     {% endif %}
         
     

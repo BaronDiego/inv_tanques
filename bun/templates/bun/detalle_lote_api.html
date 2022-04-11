@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Detalle Lote{% endblock titulo %}
+{% block contenido %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Detalle Lote {{de_Lt_api.referncia}} - {{de_Lt_api.producto}}</h1>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-8 col-xl-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <ul>
+                        <li>Id: <b>{{de_Lt_api_api.id}}</b></li>
+                        <li>Referencia: <b>{{de_Lt_api_api.referencia}}</b></li>
+                        <li>Producto: <b>{{de_Lt_api_api.producto}}</b></li>
+                        <li>API: <b>{{de_Lt_api_api.api}}</b></li>
+                        <hr>
+                        <a href="{% url 'editar_lote_api' de_Lt_api.pk %}" class="btn btn-primary">Editar</a>
+                        <a href="{% url 'eliminar_lote_api' de_Lt_api.pk %}" class="btn btn-danger">Eliminar</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

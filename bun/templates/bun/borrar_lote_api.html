@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block titulo %}Eliminar Lote API{% endblock titulo %}
+
+{% block contenido %}
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-8 col-xl-6">
+        <div class="card border-left-success shadow h-100">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4 class="m-0 font-weight-bold text-success">Borrar Lote API</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="form-group">
+                            {{form|crispy}}
+                            <p>¿Deseas eliminar el lote: <b>{{obj.referncia}} - {{obj.producto}}</b>?</p>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                        <a type="button" class="btn btn-primary" href="{% url 'listado_lotes' %}">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
