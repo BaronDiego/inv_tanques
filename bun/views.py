@@ -294,7 +294,12 @@ def detalle_ocupacion_tk(request, id):
     if calculo == "" or calculo == 0:
         calculo = 0
     calculo_tk = Calculo.objects.filter(tanque_id=id).order_by('-creado').values()[:1]
-    id_calculo = calculo_tk[0]['id']
+
+    try:
+        id_calculo = calculo_tk[0]['id']
+    except IndexError:
+        id_calculo = 0
+    
     if calculo_tk == "":
         calculo_tk = 0
     # volumen_actual_tk = calculo_tk[0]['volumen'] 
@@ -308,6 +313,7 @@ def detalle_ocupacion_tk(request, id):
         volumen_actual_tk = 0
         ultima_medicion = 0
         calculo_lote = 0
+        tipo_medicion = "-"
     
     lote = Lote.objects.filter(id=calculo_lote).values()
     try:
@@ -318,6 +324,7 @@ def detalle_ocupacion_tk(request, id):
     except IndexError:
         lote_producto = 0
         masa_tk = 0
+        lote_refencia = "-"
 
     tanque = Tanque.objects.filter(id=id).values()
     tag = tanque[0]['tag']
@@ -326,6 +333,9 @@ def detalle_ocupacion_tk(request, id):
     data = [volumen_total_tk, volumen_actual_tk]
     terminal = tanque[0]['terminal']
     bodega = tanque[0]['bodega']
+    tipo = tanque[0]['tipo']
+    diametro = tanque[0]['diametro']
+    altura_cilindro = tanque[0]['altura_cilindro']
 
     try:
         porcentaje_ocupacion = (volumen_actual_tk / volumen_total_tk) * 100
@@ -348,13 +358,18 @@ def detalle_ocupacion_tk(request, id):
         'tipo_medicion':tipo_medicion,
         'terminal':terminal,
         'id_calculo':id_calculo,
+        'tipo':tipo,
+        'diametro':diametro,
+        'altura_cilindro':altura_cilindro
+
         })
 
 
+@login_required(login_url='login')
 def exportar_excel(request, id):
     export = []
 
-    export.append(['Fecha', 'Tipo Medición','Medicion','Temperatua','Volumen', 'Densidad', 'Masa','Lote', 'Operador', 'Sellos Válvulas', 'Sellos Tapas','Nombre Buque']) #SellosValvulas - SellosTapas
+    export.append(['Fecha', 'Tipo Medición','Medicion','Temperatua','Volumen', 'Densidad', 'Masa','Lote', 'Operador', 'Sellos Válvulas', 'Sellos Tapas','Nombre Buque', 'Fecha Llegada Buque']) #SellosValvulas - SellosTapas
     data = Calculo.objects.filter(tanque_id=id)
     tanque = Tanque.objects.filter(id=id).values()
     tag = tanque[0]['tag']
@@ -717,7 +732,7 @@ class DetalleLoteApi(SinPrivilegios, DetailView):
     permission_required = 'bun.view_loteapi'
     model = LoteApi
     template_name = 'bun/detalle_lote_api.html'
-    context_object_name = 'de_Lt_api'
+    context_object_name = 'obj'
 
 class EditarLoteApi(SuccessMessageMixin, SinPrivilegios, UpdateView):
     permission_required = 'bun.change_loteapi'
@@ -805,6 +820,7 @@ def detalle_ocupacion_tk_api(request, id):
         })
 
 
+@login_required(login_url='login')
 def exportar_excel_api(request, id):
     export = []
 
@@ -855,7 +871,7 @@ def exportar_excel_api(request, id):
     return excel.make_response(sheet, "xlsx", file_name="dataApi"+tag+"_"+strToday+".xlsx")
 
 
-
+@login_required(login_url='login')
 def buscar_lote(request):
     q = request.GET.get('q', '')
     querys = (Q(referencia__icontains=q ) | Q(producto__icontains=q))
@@ -867,6 +883,8 @@ def buscar_lote(request):
         'q':q
         })
 
+
+@login_required(login_url='login')
 def buscar_tanque(request):
     q = request.GET.get('q', '')
     querys = (Q(bodega__icontains=q ) | Q(tag__icontains=q))
@@ -879,6 +897,7 @@ def buscar_tanque(request):
         })
 
 
+@login_required(login_url='login')
 def buscar_lote_api(request):
     q = request.GET.get('q', '')
     querys = (Q(referencia__icontains=q ) | Q(producto__icontains=q))

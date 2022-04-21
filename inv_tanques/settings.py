@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-f9hpwod$--n8%^l*$-)=m__)mx2aocp6%f+t@2%53$4wdl9(4r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', 'www.algranel.com.co', 'inventarioterminales.algranel.com.co']
+ALLOWED_HOSTS = ['localhost', 'www.algranel.com.co', 'inventarios.algranel.com.co']
 
 
 # Application definition

@@ -7,7 +7,7 @@ TIPO_MEDIDA = (
     ('I', 'INICIAL'),
     ('C', 'CONTROL'),
     ('D', 'DEFINITIVA'),
-    ('ID', 'INICAL DESPACHO'),
+    ('ID', 'INICIAL DESPACHO'),
     ('IR', 'INICIAL RECIBO'),
     ('FD', 'FINAL DESPACHO'),
     ('FR', 'FINAL RECIBO'),

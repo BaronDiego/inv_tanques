@@ -22,18 +22,37 @@
                 <p>Tipo medición:
                     <b>
                         {% if tipo_medicion == "I" %}
-                        Inical
+                            Inical
                         {% endif %}
+
                         {% if tipo_medicion == "F" %}
-                        Final
+                            Final
                         {% endif %}
+
                         {% if tipo_medicion == "D" %}
-                        Definitivo
+                            Definitivo
                         {% endif %}
+
                         {% if tipo_medicion == "C" %}
-                        Control
+                            Control
+                        {% endif %}
+
+                        {% if m.estado == "ID" %}
+                            Inicial Despacho
+                        {% endif %}
+
+                        {% if m.estado == "IR" %}
+                            Inicial Recibo
+                        {% endif %}
+
+                        {% if m.estado == "FD" %}
+                            Final Despacho
+                        {% endif %}
+
+                        {% if m.estado == "FR" %}
+                            Final Recibo
                         {% else %}
-                        Prueba
+                            Prueba
                         {% endif %}
                     </b>
                 </p>
@@ -71,18 +90,21 @@
                         <td>{{m.creado|date:"d b Y H:i"}}</td>
                         <td>
                             {% if m.estado == "I" %}
-                            Inical
+                                Inical
                             {% endif %}
+
                             {% if m.estado == "F" %}
-                            Final
+                                Final
                             {% endif %}
+
                             {% if m.estado == "D" %}
-                            Definitivo
+                                Definitivo
                             {% endif %}
+
                             {% if m.estado == "C" %}
-                            Control
+                                Control
                             {% else %}
-                            Prueba
+                                Prueba
                             {% endif %}
                         </td>
                         <td>{{m.volumen|floatformat:2}} lts</td>
@@ -130,6 +152,6 @@
         }
     });
 </script>
-{% endblock contenido %}
+{% endblock %}
 {% block js_page %}
 {% endblock js_page %}

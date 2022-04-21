@@ -15,6 +15,7 @@
                         <th>Volumen Actual</th>
                         <th>% Ocupación</th>
                         <th>Masa Kg</th>
+                        <th>Producto</th>
                         <th>Modificado</th>
                     </tr>
                 </thead>
@@ -23,11 +24,12 @@
                         {% if not c.volumen %}
                         {% else %}
                             <tr class="text-center">
-                                <td>{{c.tanque}}</td>
+                                <td><a href="{% url 'detalle_ocupacion_tk_ctg' c.tanque.id %}">{{c.tanque}}</a> </td>
                                 <td>{{c.tanque.volumen|floatformat:0}}</td>
                                 <td>{{c.volumen|floatformat:2}}</td>
                                 <td>{{c.ocupacion|floatformat:2}}%</td>
                                 <td>{{c.masa|floatformat:2}} Kg</td>
+                                <td>{{c.lote.producto}}</td>
                                 <td>{{c.creado}}</td>
                             </tr>
                         {% endif %}
