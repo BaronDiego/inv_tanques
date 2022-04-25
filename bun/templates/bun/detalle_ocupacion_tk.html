@@ -79,6 +79,7 @@
                     <tr class="text-center">
                         <th>Fecha Medición</th>
                         <th>Tipo Medición</th>
+                        <th>Altura Medición</th>
                         <th>Volumen</th>
                         <th>Temperatura TQ</th>
                         <th>Densidad</th>
@@ -117,6 +118,7 @@
                             Control
                             {% endif %}
                         </td>
+                        <td>{{m.medicion}} mm</td>
                         <td>{{m.volumen|floatformat:2}} lts</td>
                         <td>{{m.temperatura_tq}}</td>
                         <td>{{m.densidad|floatformat:5}}</td>

@@ -328,7 +328,7 @@ def detalle_ocupacion_tk(requeest, id):
         'terminal':terminal,
         'tipo':tipo,
         'diametro':diametro,
-        'altura_cilindro':altura_cilindro
+        'altura_cilindro':altura_cilindro,
         })
 
 

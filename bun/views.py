@@ -795,6 +795,9 @@ def detalle_ocupacion_tk_api(request, id):
     data = [volumen_total_tk, volumen_actual_tk]
     terminal = tanque[0]['terminal']
     bodega = tanque[0]['bodega']
+    tipo = tanque[0]['tipo']
+    diametro = tanque[0]['diametro']
+    altura_cilindro = tanque[0]['altura_cilindro']
 
 
     try:
@@ -816,8 +819,48 @@ def detalle_ocupacion_tk_api(request, id):
         'id_tk':id_tk,
         'lote_refencia':lote_refencia,
         'tipo_medicion':tipo_medicion,
-        'terminal':terminal
+        'terminal':terminal,
+        'tipo':tipo,
+        'diametro':diametro,
+        'altura_cilindro':altura_cilindro
         })
+
+
+@login_required(login_url='login')
+def exportar_excel_tanques(request):
+    export = []
+    export.append(['Tanque','Volumen Tanque','Masa', 'Cliente', 'Producto'])
+
+    idis_tk = Tanque.objects.all().values()
+    list_idis = []
+    for id in idis_tk:
+        list_idis.append(id['id'])
+
+    calculos = []
+    for ct in list_idis:
+        qs = Calculo.objects.filter(tanque_id=ct).first()
+        if qs:
+            calculos.append(qs)
+
+    for qs in calculos:
+        if qs.masa == 0:
+            qs.lote.cliente = "Sin cliente"
+            qs.lote.producto = "Vacio"
+
+
+        export.append([
+            qs.tanque.tag,
+            qs.tanque.volumen / 1000,
+            "{:,.2f}".format(qs.masa).replace(",", "@").replace(".", ",").replace("@", "."),
+            qs.lote.cliente,
+            qs.lote.producto.upper()
+        ])
+
+
+    today    = datetime.now()
+    strToday = today.strftime("%Y%m%d")
+    sheet = excel.pe.Sheet(export)
+    return excel.make_response(sheet, "xlsx", file_name="dataTanques"+"_"+strToday+".xlsx")
 
 
 @login_required(login_url='login')
