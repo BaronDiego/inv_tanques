@@ -14,7 +14,48 @@
                 <div class="card-body">
                     <div class="form-group row">
                         <div class="col-sm-12 col-md-12 mb-3 mb-sm-0">
-                            {{form|crispy}}
+                            <div class="form-group">
+                                <label>Tanque</label>
+                                <select name="tanque" id="tanque" class="form-control">
+                                    <option value="0">Seleccione tanque</option>
+                                    {% for t in form.tanque %}
+                                        <option value="">{{t.tag}} {{t.bodega}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Lote</label>
+                                <select name="lote" id="lote" class="form-control">
+                                    <option value="0">Seleccione lote</option>
+                                    {% for t in form.lote %}
+                                        <option value="">{{t}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Estado</label>
+                                <select name="estado" id="estado" class="form-control">
+                                    {% for t in form.estado %}
+                                        <option value="">{{t}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Medición</label>
+                                <input type="number" class="form-control" name="{{form.medicion.name}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Temperatura tanque</label>
+                                <input type="number" class="form-control" name="{{form.temperatura_tq.name}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Sellos Tapas</label>
+                                <input type="text" class="form-control" name="{{form.sellos_tapas.name}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Sellos Valvulas</label>
+                                <input type="text" class="form-control" name="{{form.sellos_valvulas.name}}">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -23,11 +64,23 @@
                         <span class="icon text-white-50">
                             <i class="fas fa-check"></i>
                         </span>
-                        <span class="text">Calcular</span>
+                        <span class="text">Calcular</span> 
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    $(function(){
+        $("#lote").select2({
+            placeholder: "Seleccione lote",
+            allowClear: true
+        });
+        $("#tanque").select2({
+            placeholder: "Seleccione tanque",
+            allowClear: true
+        });
+    })
+</script>
 {% endblock contenido %}

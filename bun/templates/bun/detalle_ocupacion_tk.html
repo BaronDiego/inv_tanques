@@ -34,26 +34,45 @@
                                         {% if tipo_medicion == "I" %}
                                         Inical
                                         {% endif %}
+
                                         {% if tipo_medicion == "F" %}
                                         Final
                                         {% endif %}
+
                                         {% if tipo_medicion == "D" %}
                                         Definitivo
                                         {% endif %}
+
                                         {% if tipo_medicion == "ID" %}
                                         Inicial Despacho
                                         {% endif %}
+
                                         {% if tipo_medicion == "IR" %}
                                         Inicial Recibo
                                         {% endif %}
+
                                         {% if tipo_medicion == "FD" %}
                                         Final Despacho
                                         {% endif %}
+
                                         {% if tipo_medicion == "FR" %}
                                         Final Recibo
                                         {% endif %}
+
                                         {% if tipo_medicion == "C" %}
                                         Control
+                                        {% endif %}
+
+                                        {% if tipo_medicion == "T" %}
+                                        Tentativa
+                                        {% endif %}
+
+                                        {% if tipo_medicion == "IT" %}
+                                        Inicial Traslado
+                                        {% endif %}
+
+                                        {% if tipo_medicion == "FT" %}
+                                        Final Traslado 
                                         {% endif %}
                                     </b>
                                 </li>
@@ -117,6 +136,16 @@
                             {% if m.estado == "C" %}
                             Control
                             {% endif %}
+                            {% if m.estado == "T" %}
+                            Tentativa
+                            {% endif %}
+                            {% if m.estado == "IT" %}
+                            Inicial Traslado
+                            {% endif %}
+                            {% if m.estado == "FT" %}
+                            Final Traslado 
+                            {% endif %}
+
                         </td>
                         <td>{{m.medicion}} mm</td>
                         <td>{{m.volumen|floatformat:2}} lts</td>

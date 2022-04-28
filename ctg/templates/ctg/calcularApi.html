@@ -14,7 +14,48 @@
                 <div class="card-body">
                     <div class="form-group row">
                         <div class="col-sm-12 col-md-12 mb-3 mb-sm-0">
-                            {{form|crispy}}
+                            <div class="form-group">
+                                <label for="id_tanque">Tanque</label>
+                                <select name="tanque" required="" id="id_tanque" class="form-control">
+                                    <option value="" selected="">Seleccione tanque</option>
+                                    {% for t in form.tanque %}
+                                        <option value="{{t.id}}">{{t.tag}} {{t.bodega}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_lote_api">Lote</label>
+                                <select name="lote_api" required="" id="id_lote_api" class="form-control">
+                                    <option value="" selected="">Seleccione lote</option>
+                                    {% for t in form.lote_api %}
+                                        <option value="{{t.id}}">{{t}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_medicion">Medición</label>
+                                <input type="number" name="{{form.medicion.name}}" value="0" required="" id="id_medicion" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_tabla_6d">Tabla 6D</label>
+                                <input type="number" name="{{form.tabla_6d.name}}" value="0" step="any" id="id_tabla_6d" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_estado">Estado</label>
+                                <select name="estado" required="" id="id_estado" class="form-control">
+                                    {% for t in form.estado %}
+                                        <option value="" selected="">{{t}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_temperatura_tq">Temperatura tanque</label>
+                                <input type="number" name="{{form.temperatura_tq.name}}" step="any" id="id_temperatura_tq" class="form-control">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -30,4 +71,16 @@
         </div>
     </div>
 </div>
+<script>
+    $(function(){
+        $("#id_lote_api").select2({
+            placeholder: "Seleccione lote",
+            allowClear: true
+        });
+        $("#id_tanque").select2({
+            placeholder: "Seleccione tanque",
+            allowClear: true
+        });
+    })
+</script>
 {% endblock contenido %}

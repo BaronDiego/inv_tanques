@@ -76,9 +76,9 @@ def calculo(request):
             medicion_aforo = AforoTanque.objects.filter(tanque_id=id_tanque, nivel=medicion).values()
 
             try:
-                form.instance.volumen = medicion_aforo[0]['medicion']
+                form.instance.volumen = int(medicion_aforo[0]['medicion'])
                 form.instance.densidad = densidad_ref - ((temperatura_tanque-temperatura_ref)*factor_correccion)
-                form.instance.masa = form.instance.densidad * form.instance.volumen
+                form.instance.masa = int(form.instance.densidad * form.instance.volumen) 
                 form.instance.uc = request.user
                 form.save()
                 return redirect('listado_tanques_ope')
@@ -343,6 +343,7 @@ def detalle_ocupacion_tk(request, id):
         porcentaje_ocupacion = 0
 
 
+
     return render(request, 'bun/detalle_ocupacion_tk.html', {
         'mediciones':calculo, 
         'volumen_total_tk':volumen_total_tk,
@@ -400,9 +401,9 @@ def exportar_excel(request, id):
                 d.estado.upper(),
                 d.medicion,
                 d.temperatura_tq,
-                "{:,.2f}".format(d.volumen).replace(",", "@").replace(".", ",").replace("@", "."),
+                d.volumen,
                 d.densidad,
-                "{:,.2f}".format(d.masa).replace(",", "@").replace(".", ",").replace("@", "."),
+                d.masa,
                 d.lote.producto.upper(),
                 d.uc.username.upper(),
                 d.sellos_valvulas,
@@ -675,41 +676,6 @@ def calculoApi(request):
         form = CalculoApiForm()
         return render(request, 'bun/calcularApi.html', {'form':form})
 
-    if request.method == 'POST':
-        form = CalculoApiForm(data=request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            if cd['medicion'] == None:
-                cd['medicion'] = 0
-            medicion = cd['medicion']
-            tabla_6d = cd['tabla_6d']
-
-            tanque = Tanque.objects.filter(id=request.POST['tanque']).values()
-            lote = LoteApi.objects.filter(id=request.POST['lote_api']).values()
-            altura_medicion_tanque = tanque[0]['altura_medicion']
-            temperatura = lote[0]['temperatura']
-            api = lote[0]['api']
-
-
-            if medicion > altura_medicion_tanque:
-                messages.error(request ,"La medición es mayor que la altura de medición estabelecida")
-
-            id_tanque = tanque[0]['id']
-            medicion_aforo = AforoTanque.objects.filter(tanque_id=id_tanque, nivel=medicion).values()
-
-            form.instance.volumen = medicion_aforo[0]['medicion']
-            galones = form.instance.volumen * 0.264172
-            masa1 = galones * tabla_6d
-            tabla13 = ((141.3819577/(api + 131.5)) - 0.001199407795) * 3.785411784
-            form.instance.masa = masa1 * tabla13
-            form.instance.densidad = form.instance.masa / form.instance.volumen
-            form.instance.uc = request.user
-            form.save()
-            return redirect('listado_tanques_ope')
-    else:
-        form = CalculoApiForm()
-        return render(request, 'bun/calcularApi.html', {'form':form})
-
 
 class CrearLoteApi(SinPrivilegios, CreateView):
     permission_required = 'bun.add_loteapi'
@@ -829,7 +795,7 @@ def detalle_ocupacion_tk_api(request, id):
 @login_required(login_url='login')
 def exportar_excel_tanques(request):
     export = []
-    export.append(['Tanque','Volumen Tanque','Masa', 'Cliente', 'Producto'])
+    export.append(['Tanque','Volumen Tanque (m3)','Masa (TON)', 'Cliente', 'Producto'])
 
     idis_tk = Tanque.objects.all().values()
     list_idis = []
@@ -847,11 +813,10 @@ def exportar_excel_tanques(request):
             qs.lote.cliente = "Sin cliente"
             qs.lote.producto = "Vacio"
 
-
         export.append([
             qs.tanque.tag,
             qs.tanque.volumen / 1000,
-            "{:,.2f}".format(qs.masa).replace(",", "@").replace(".", ",").replace("@", "."),
+            qs.masa / 1000,
             qs.lote.cliente,
             qs.lote.producto.upper()
         ])

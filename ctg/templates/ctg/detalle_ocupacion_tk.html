@@ -80,6 +80,7 @@
                         <tr class="text-center">
                             <th>Fecha Medición</th>
                             <th>Tipo Medición</th>
+                            <th>Altura Medición</th>
                             <th>Volumen</th>
                             <th>Temperatura TQ</th>
                             <th>Densidad</th>
@@ -94,24 +95,46 @@
                                 <td>{{m.creado|date:"d b Y H:i"}}</td>
                                 <td>
                                     {% if m.estado == "I" %}
-                                        Inical
+                                    Inical
                                     {% endif %}
                                     {% if m.estado == "F" %}
-                                        Final
+                                    Final
                                     {% endif %}
                                     {% if m.estado == "D" %}
-                                        Definitivo
+                                    Definitivo
+                                    {% endif %}
+                                    {% if m.estado == "ID" %}
+                                    Inicial Despacho
+                                    {% endif %}
+                                    {% if m.estado == "IR" %}
+                                    Inicial Recibo
+                                    {% endif %}
+                                    {% if m.estado == "FD" %}
+                                    Final Despacho
+                                    {% endif %}
+                                    {% if m.estado == "FR" %}
+                                    Final Recibo
                                     {% endif %}
                                     {% if m.estado == "C" %}
-                                        Control
+                                    Control
+                                    {% endif %}
+                                    {% if m.estado == "T" %}
+                                    Tentativa
+                                    {% endif %}
+                                    {% if m.estado == "IT" %}
+                                    Inicial Traslado
+                                    {% endif %}
+                                    {% if m.estado == "FT" %}
+                                    Final Traslado 
                                     {% endif %}
                                 </td>
+                                <td>{{m.medicion}} mm</td>
                                 <td>{{m.volumen|floatformat:2}} lts</td>
                                 <td>{{m.temperatura_tq}}</td>
                                 <td>{{m.densidad|floatformat:5}}</td>
                                 <td>{{m.masa|floatformat:2}} Kg</td>
                                 <td>{{m.lote}}</td>
-                                <td>{{m.uc}}</td>
+                                <td>{{m.uc.first_name}} {{m.uc.last_name}}</td> 
                             </tr>
                         {% endfor %}
                     </tbody>

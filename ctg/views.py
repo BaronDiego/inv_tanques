@@ -74,9 +74,9 @@ def calculo(request):
             medicion_aforo = AforoTanqueCtg.objects.filter(tanque_id=id_tanque, nivel=medicion).values()
 
             try:
-                form.instance.volumen = medicion_aforo[0]['medicion']
+                form.instance.volumen = int(medicion_aforo[0]['medicion'])
                 form.instance.densidad = densidad_ref - ((temperatura_tanque-temperatura_ref)*factor_correccion)
-                form.instance.masa = form.instance.densidad * form.instance.volumen
+                form.instance.masa = int(form.instance.densidad * form.instance.volumen)
                 form.instance.uc = request.user
                 form.save()
                 return redirect('listado_tanques_ope_ctg')
@@ -118,11 +118,8 @@ def crearCalculoApi(request):
             try:
                 form.instance.volumen = medicion_aforo[0]['medicion']
                 galones = form.instance.volumen * 0.264172
-                print(galones)
                 galones_gsv = galones * tabla_6d
-                print(galones_gsv)
                 toneladas = float(tabla_13) * float(galones_gsv)
-                print(toneladas)
                 form.instance.uc = request.user
                 form.instance.masa = toneladas
                 form.save()
@@ -367,9 +364,9 @@ def exportar_excel(request, id):
                 d.estado.upper(),
                 d.medicion,
                 d.temperatura_tq,
-                "{:,.2f}".format(d.volumen).replace(",", "@").replace(".", ",").replace("@", "."),
+                d.volumen,
                 d.densidad,
-                "{:,.2f}".format(d.masa).replace(",", "@").replace(".", ",").replace("@", "."),
+                d.masa,
                 d.lote.producto.upper(),
                 d.uc.username.upper(),
                 d.sellos_valvulas,

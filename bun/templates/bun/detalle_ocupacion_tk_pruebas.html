@@ -51,8 +51,18 @@
 
                         {% if m.estado == "FR" %}
                             Final Recibo
-                        {% else %}
-                            Prueba
+                        {% endif %}
+
+                        {% if m.estado == "T" %}
+                        Tentativa
+                        {% endif %}
+
+                        {% if m.estado == "IT" %}
+                        Inicial Traslado
+                        {% endif %}
+                        
+                        {% if m.estado === "FT" %}
+                        Final Traslado 
                         {% endif %}
                     </b>
                 </p>

@@ -11,6 +11,9 @@ TIPO_MEDIDA = (
     ('IR', 'INICIAL RECIBO'),
     ('FD', 'FINAL DESPACHO'),
     ('FR', 'FINAL RECIBO'),
+    ('T', 'TENTATIVA'),
+    ('IT', 'INICIAL TRASLADO'),
+    ('FT', 'FINAL TRASLADO')
 )
 
 class ClaseBase(models.Model):
