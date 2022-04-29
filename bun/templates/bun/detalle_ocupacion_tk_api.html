@@ -55,6 +55,15 @@
                                     {% if tipo_medicion == "C" %}
                                     Control
                                     {% endif %}
+                                    {% if m.estado == "T" %}
+                                    Tentativa
+                                    {% endif %}
+                                    {% if m.estado == "IT" %}
+                                    Inicial Traslado
+                                    {% endif %}
+                                    {% if m.estado == "FT" %}
+                                    Final Traslado 
+                                    {% endif %}
                                 </b>
                             </li>
                         </ul>
@@ -80,6 +89,7 @@
                     <tr class="text-center">
                         <th>Fecha Medición</th>
                         <th>Tipo Medición</th>
+                        <th>Altura Medición</th>
                         <th>Volumen</th>
                         <th>Temperatura TQ</th>
                         <th>Densidad</th>
@@ -117,7 +127,17 @@
                             {% if m.estado == "C" %}
                             Control
                             {% endif %}
+                            {% if m.estado == "T" %}
+                            Tentativa
+                            {% endif %}
+                            {% if m.estado == "IT" %}
+                            Inicial Traslado
+                            {% endif %}
+                            {% if m.estado == "FT" %}
+                            Final Traslado 
+                            {% endif %}
                         </td>
+                        <td>{{m.medicion}} mm</td>
                         <td>{{m.volumen|floatformat:2}} lts</td>
                         <td>
                             {% if m.temperatura_tq == None %}
