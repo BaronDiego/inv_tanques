@@ -795,7 +795,7 @@ def detalle_ocupacion_tk_api(request, id):
 @login_required(login_url='login')
 def exportar_excel_tanques(request):
     export = []
-    export.append(['Tanque','Volumen Tanque (m3)','Masa (TON)', 'Cliente', 'Producto'])
+    export.append(['Tanque','Volumen Tanque (m3)','Masa (TON)','Cliente','Lote (DO)','Producto'])
 
     idis_tk = Tanque.objects.all().values()
     list_idis = []
@@ -818,6 +818,7 @@ def exportar_excel_tanques(request):
             qs.tanque.volumen / 1000,
             qs.masa / 1000,
             qs.lote.cliente,
+            qs.lote.referencia,
             qs.lote.producto.upper()
         ])
 

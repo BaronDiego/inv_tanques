@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load humanize %}
 {% block titulo %}Detalle Ocupación Tanque{% endblock titulo %}
 {% block contenido %}
 <div class="card border-left-info shadow h-100">
@@ -21,14 +22,14 @@
                             <ul>
                                 <li>Id: <b>{{id_tk}}</b></li>
                                 <li>Tipo: <b>{{tipo}}</b></li>
-                                <li>Diámetro: <b>{{diametro}} mm</b></li>
-                                <li>Altura: <b>{{altura_cilindro}} mm</b></li>
-                                <li>Capacidad TK: <b>{{volumen_total_tk|floatformat:"2"}} lts</b></li>
+                                <li>Diámetro: <b>{{diametro|floatformat:"0"|intcomma}} mm</b></li>
+                                <li>Altura: <b>{{altura_cilindro|floatformat:"0"|intcomma}} mm</b></li>
+                                <li>Capacidad TK: <b>{{volumen_total_tk|floatformat:"0"|intcomma}} lts</b></li>
                                 <hr>
-                                <li>Volumen Actual: <b>{{volumen_actual_tk|floatformat:"2"}} lts</b></li>
-                                <li>% de Ocupación: <b>{{porcentaje_ocupacion|floatformat:"2"}}%</b></li>
+                                <li>Volumen Actual: <b>{{volumen_actual_tk|floatformat:"0"|intcomma}} lts</b></li>
+                                <li>% de Ocupación: <b>{{porcentaje_ocupacion|floatformat:"0"|intcomma}}%</b></li>
                                 <li>Lote: <b>{{lote_producto}} - {{lote_refencia}}</b></li>
-                                <li>Masa: <b>{{masa_tk|floatformat:"2"}} Kg</b></li>
+                                <li>Masa: <b>{{masa_tk|floatformat:"0"|intcomma}} Kg</b></li>
                                 <li>Última medición: <b>{{ultima_medicion|date:"d b Y P"}}</b></li>
                                 <li>Tipo medición:
                                     <b>
@@ -128,11 +129,11 @@
                                     Final Traslado 
                                     {% endif %}
                                 </td>
-                                <td>{{m.medicion}} mm</td>
-                                <td>{{m.volumen|floatformat:2}} lts</td>
+                                <td>{{m.medicion|floatformat:"0"|intcomma}} mm</td>
+                                <td>{{m.volumen|floatformat:"0"|intcomma}} lts</td>
                                 <td>{{m.temperatura_tq}}</td>
                                 <td>{{m.densidad|floatformat:5}}</td>
-                                <td>{{m.masa|floatformat:2}} Kg</td>
+                                <td>{{m.masa|floatformat:"0"|intcomma}} Kg</td>
                                 <td>{{m.lote}}</td>
                                 <td>{{m.uc.first_name}} {{m.uc.last_name}}</td> 
                             </tr>

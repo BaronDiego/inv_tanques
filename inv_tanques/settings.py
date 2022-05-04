@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'import_export',
     'crispy_forms',
     'rest_framework',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
