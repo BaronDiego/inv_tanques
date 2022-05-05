@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from django.shortcuts import render, redirect
+from pytz import utc
 from tablib import Dataset
 import tablib
 from requests import post
@@ -65,6 +66,7 @@ def calculo(request):
                 messages.error(request ,"La medición es mayor que la altura de medición estabelecida")
 
             temperatura_tanque = cd['temperatura_tq']
+            float(temperatura_tanque)
             lote = LoteCtg.objects.filter(id=request.POST['lote']).values()
             id_tanque = tanque[0]['id']
             densidad_ref = lote[0]['densidad_ref']
@@ -263,70 +265,146 @@ class BorrarLote( SuccessMessageMixin, SinPrivilegios, DeleteView):
 
 
 @login_required(login_url='login')
-def detalle_ocupacion_tk(requeest, id):
-    calculo = CalculoCtg.objects.filter(tanque_id=id).order_by('-creado')[:2]
-    if calculo == "":
-        calculo = 0
-    calculo_tk = CalculoCtg.objects.filter(tanque_id=id).order_by('-creado').values()[:1]
-    if calculo_tk == "":
-        calculo_tk = 0
-    # volumen_actual_tk = calculo_tk[0]['volumen']
-    try:
-        volumen_actual_tk = calculo_tk[0]['volumen']
-        ultima_medicion = calculo_tk[0]['creado']
-        calculo_lote = calculo_tk[0]['lote_id']
-        tipo_medicion = calculo_tk[0]['estado']
-    except IndexError:
-        volumen_actual_tk = 0
-        ultima_medicion = 0
-        calculo_lote = 0
-        tipo_medicion = "-"
+def detalle_ocupacion_tk(request, id):
+    creado_medicion_normal = CalculoCtg.objects.filter(tanque_id=id).values().first()
+    if creado_medicion_normal == None:
+        fecha_ult_medicion = datetime(2000, 1, 1, 00, 00, 0, 209258, tzinfo=utc)
+    else:
+        fecha_ult_medicion =  creado_medicion_normal['creado']
     
-    lote = LoteCtg.objects.filter(id=calculo_lote).values()
-    try:
-        lote_producto = lote[0]['producto']
-        lote_refencia = lote[0]['referencia']
-        masa_tk = calculo_tk[0]['masa']
-        # lote_buque = lote[0]['nombre_buque']
-    except IndexError:
-        lote_producto = 0
-        lote_refencia = "-"
-        masa_tk = 0
+    creado_medicion_api = CalculoApiCtg.objects.filter(tanque_id=id).values().first()
+    if creado_medicion_api == None:
+        fecha_ult_medicion_api = datetime(2000, 1, 1, 00, 00, 0, 209258, tzinfo=utc)
+    else:
+        fecha_ult_medicion_api =  creado_medicion_api['creado']
 
-    tanque = TanqueCtg.objects.filter(id=id).values()
-    tag = tanque[0]['tag']
-    id_tk = tanque[0]['id']
-    volumen_total_tk = tanque[0]['volumen']
-    data = [volumen_total_tk, volumen_actual_tk]
-    terminal = tanque[0]['terminal']
-    tipo = tanque[0]['tipo']
-    diametro = tanque[0]['diametro']
-    altura_cilindro = tanque[0]['altura_cilindro']
 
-    try:
-        porcentaje_ocupacion = (volumen_actual_tk / volumen_total_tk) * 100
-    except TypeError:
-        porcentaje_ocupacion = 0
-    
+    if fecha_ult_medicion_api > fecha_ult_medicion:
+        calculo_api = CalculoApiCtg.objects.filter(tanque_id=id).order_by('-creado')[:2]
+        if calculo_api == "" or calculo_api == 0:
+            calculo_api = 0
+        calculo_tk_api = CalculoApiCtg.objects.filter(tanque_id=id).order_by('-creado').values()[:1]
+        if calculo_tk_api == "":
+            calculo_tk_api = 0
+        # volumen_actual_tk = calculo_tk[0]['volumen']
+        try:
+            volumen_actual_tk_api = calculo_tk_api[0]['volumen']
+            ultima_medicion_api = calculo_tk_api[0]['creado']
+            calculo_lote_api = calculo_tk_api[0]['lote_api_id']
+            tipo_medicion_api = calculo_tk_api[0]['estado']
+        except IndexError:
+            volumen_actual_tk_api = 0
+            ultima_medicion_api = 0
+            calculo_lote_api = 0
+        
+        lote_api = LoteApiCtg.objects.filter(id=calculo_lote_api).values()
+        try:
+            lote_producto_api = lote_api[0]['producto']
+            lote_refencia_api = lote_api[0]['referencia']
+            masa_tk_api = calculo_tk_api[0]['masa']
+            # lote_buque = lote[0]['nombre_buque']
+        except IndexError:
+            lote_producto_api = 0
+            masa_tk_api = 0
 
-    return render(requeest, 'ctg/detalle_ocupacion_tk.html', {
-        'mediciones':calculo, 
-        'volumen_total_tk':volumen_total_tk,
-        'volumen_actual_tk':volumen_actual_tk,
-        'lote_producto':lote_producto,
-        'masa_tk':masa_tk,
-        'data':data,
-        'tag':tag,
-        'ultima_medicion':ultima_medicion,
-        'porcentaje_ocupacion':porcentaje_ocupacion,
-        'id_tk':id_tk,
-        'lote_refencia':lote_refencia,
-        'tipo_medicion':tipo_medicion,
-        'terminal':terminal,
-        'tipo':tipo,
-        'diametro':diametro,
-        'altura_cilindro':altura_cilindro,
-        })
+        tanque_api = TanqueCtg.objects.filter(id=id).values()
+        tag_api = tanque_api[0]['tag']
+        id_tk_api = tanque_api[0]['id']
+        volumen_total_tk_api = tanque_api[0]['volumen']
+        data_api = [volumen_total_tk_api, volumen_actual_tk_api]
+        terminal_api = tanque_api[0]['terminal']
+        bodega_api = tanque_api[0]['bodega']
+        tipo_api = tanque_api[0]['tipo']
+        diametro_api = tanque_api[0]['diametro']
+        altura_cilindro_api = tanque_api[0]['altura_cilindro']
+
+        try:
+            porcentaje_ocupacion_api = (volumen_actual_tk_api / volumen_total_tk_api) * 100
+        except TypeError:
+            porcentaje_ocupacion_api = 0
+        
+        return render(request, 'bun/detalle_ocupacion_tk_api.html', {
+            'mediciones':calculo_api, 
+            'volumen_total_tk':volumen_total_tk_api,
+            'volumen_actual_tk':volumen_actual_tk_api,
+            'lote_producto':lote_producto_api,
+            'masa_tk':masa_tk_api,
+            'data':data_api,
+            'tag':tag_api,
+            'ultima_medicion':ultima_medicion_api,
+            'porcentaje_ocupacion':porcentaje_ocupacion_api,
+            'id_tk':id_tk_api,
+            'lote_refencia':lote_refencia_api,
+            'tipo_medicion':tipo_medicion_api,
+            'terminal':terminal_api,
+            'tipo':tipo_api,
+            'diametro':diametro_api,
+            'altura_cilindro':altura_cilindro_api
+            })
+    else:
+        calculo = CalculoCtg.objects.filter(tanque_id=id).order_by('-creado')[:2]
+        if calculo == "":
+            calculo = 0
+        calculo_tk = CalculoCtg.objects.filter(tanque_id=id).order_by('-creado').values()[:1]
+        if calculo_tk == "":
+            calculo_tk = 0
+        # volumen_actual_tk = calculo_tk[0]['volumen']
+        try:
+            volumen_actual_tk = calculo_tk[0]['volumen']
+            ultima_medicion = calculo_tk[0]['creado']
+            calculo_lote = calculo_tk[0]['lote_id']
+            tipo_medicion = calculo_tk[0]['estado']
+        except IndexError:
+            volumen_actual_tk = 0
+            ultima_medicion = 0
+            calculo_lote = 0
+            tipo_medicion = "-"
+        
+        lote = LoteCtg.objects.filter(id=calculo_lote).values()
+        try:
+            lote_producto = lote[0]['producto']
+            lote_refencia = lote[0]['referencia']
+            masa_tk = calculo_tk[0]['masa']
+            # lote_buque = lote[0]['nombre_buque']
+        except IndexError:
+            lote_producto = 0
+            lote_refencia = "-"
+            masa_tk = 0
+
+        tanque = TanqueCtg.objects.filter(id=id).values()
+        tag = tanque[0]['tag']
+        id_tk = tanque[0]['id']
+        volumen_total_tk = tanque[0]['volumen']
+        data = [volumen_total_tk, volumen_actual_tk]
+        terminal = tanque[0]['terminal']
+        tipo = tanque[0]['tipo']
+        diametro = tanque[0]['diametro']
+        altura_cilindro = tanque[0]['altura_cilindro']
+
+        try:
+            porcentaje_ocupacion = (volumen_actual_tk / volumen_total_tk) * 100
+        except TypeError:
+            porcentaje_ocupacion = 0
+        
+
+        return render(request, 'ctg/detalle_ocupacion_tk.html', {
+            'mediciones':calculo, 
+            'volumen_total_tk':volumen_total_tk,
+            'volumen_actual_tk':volumen_actual_tk,
+            'lote_producto':lote_producto,
+            'masa_tk':masa_tk,
+            'data':data,
+            'tag':tag,
+            'ultima_medicion':ultima_medicion,
+            'porcentaje_ocupacion':porcentaje_ocupacion,
+            'id_tk':id_tk,
+            'lote_refencia':lote_refencia,
+            'tipo_medicion':tipo_medicion,
+            'terminal':terminal,
+            'tipo':tipo,
+            'diametro':diametro,
+            'altura_cilindro':altura_cilindro,
+            })
 
 
 @login_required(login_url='login')
@@ -382,6 +460,45 @@ def exportar_excel(request, id):
     sheet = excel.pe.Sheet(export)
 
     return excel.make_response(sheet, "xlsx", file_name="data"+tag+"_"+strToday+".xlsx")
+
+
+
+@login_required(login_url='login')
+def exportar_excel_tanques_ctg(request):
+    export = []
+    export.append(['Tanque','Volumen Tanque (m3)','Masa (TON)','Cliente','Lote (DO)','Producto'])
+
+    idis_tk = TanqueCtg.objects.all().values()
+    list_idis = []
+    for id in idis_tk:
+        list_idis.append(id['id'])
+
+    calculos = []
+    for ct in list_idis:
+        qs = CalculoCtg.objects.filter(tanque_id=ct).first()
+        if qs:
+            calculos.append(qs)
+
+    for qs in calculos:
+        if qs.masa == 0:
+            qs.lote.cliente = "Sin cliente"
+            qs.lote.producto = "Vacio"
+
+        export.append([
+            qs.tanque.tag,
+            qs.tanque.volumen / 1000,
+            qs.masa / 1000,
+            qs.lote.cliente,
+            qs.lote.referencia,
+            qs.lote.producto.upper()
+        ])
+
+
+    today    = datetime.now()
+    strToday = today.strftime("%Y%m%d")
+    sheet = excel.pe.Sheet(export)
+    return excel.make_response(sheet, "xlsx", file_name="dataTanquesCtg"+"_"+strToday+".xlsx")
+
 
 @login_required(login_url='login')
 @permission_required('ctg.add_calculopruebasctg', login_url='sin_privilegios')

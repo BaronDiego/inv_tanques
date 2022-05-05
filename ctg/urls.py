@@ -36,4 +36,5 @@ urlpatterns = [
     path('buscar_lote_api', views.buscar_lote_api, name='buscar_lote_api_ctg'),
     path('editar_lote_api/<pk>/', views.EditarLoteApiCtg.as_view(), name='editar_lote_api_ctg'),
     path('eliminar_lote_api/<pk>/', views.BorrarLoteApiCtg.as_view(), name='eliminar_lote_api_ctg'),
+    path('exportar_tanques/', views.exportar_excel_tanques_ctg, name="exportar_excel_tanques_ctg"),
 ]
