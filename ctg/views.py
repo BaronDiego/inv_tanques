@@ -719,7 +719,7 @@ def detalle_tanque_sin_tabla_aforo(request):
 
 
 @login_required(login_url='login')
-@permission_required('ctg.add_calculoapictg', login_url='sin_privilegios')
+@permission_required('ctg.add_calculoapictg', login_url='sin_privilegios') 
 def calculoApiCtg(request):
     if request.method == 'POST':
         form = CalculoApiFormCtg(data=request.POST)
@@ -761,7 +761,7 @@ class CrearLoteApiCtg(SinPrivilegios, CreateView):
     permission_required = 'ctg.add_loteapictg'
     model = LoteApiCtg
     template_name = 'ctg/crear_lote_api.html'
-    success_url = reverse_lazy('listado_lotes')
+    success_url = reverse_lazy('listado_lotes_ctg')
     form_class = LoteApiFormCtg
 
     def form_valid(self, form):
@@ -799,7 +799,7 @@ class BorrarLoteApiCtg( SuccessMessageMixin, SinPrivilegios, DeleteView):
     model = LoteApiCtg
     template_name = 'ctg/borrar_lote_api.html'
     context_object_name = 'obj'
-    success_url = reverse_lazy('listado_lotes_api')
+    success_url = reverse_lazy('listado_lotes_api_ctg')
     success_message = "Lote elimiando satisfactoriamente"
 
 
