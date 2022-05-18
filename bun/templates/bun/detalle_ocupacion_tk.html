@@ -5,8 +5,13 @@
 <div class="card border-left-info shadow h-100">
     <div class="card-header py-3">
         <div class="row">
-            <h4 class="m-0 font-weight-bold text-success">Detalle Ocupación Tanque: {{tag}} - {{terminal}}</h4>
-            <p><a href="{% url 'editar_tanque' id_tk %}">Editar</a></p>
+            <h4 class="m-0 font-weight-bold text-success">Detalle Ocupación Tanque: <a href="{% url 'editar_tanque' id_tk %}">{{tag}}</a> - {{terminal}}</h4>
+            <a href="{% url 'eliminar_tanque' id_tk %}" class="btn btn-danger btn-icon-split btn-sm mx-auto">
+                <span class="icon text-white-50">
+                    <i class="fas fa-trash"></i>
+                </span>
+                <span class="text">Eliminar Tanque</span>
+            </a>
 
         </div>
     </div>

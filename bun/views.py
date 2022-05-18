@@ -314,7 +314,7 @@ def detalle_ocupacion_tk(request, id):
         try:
             volumen_actual_tk_api = calculo_tk_api[0]['volumen']
             ultima_medicion_api = calculo_tk_api[0]['creado']
-            calculo_lote_api = calculo_tk_api[0]['lote_api_id']
+            calculo_lote_api = calculo_tk_api[0]['lote_id']
             tipo_medicion_api = calculo_tk_api[0]['estado']
         except IndexError:
             volumen_actual_tk_api = 0
@@ -726,7 +726,7 @@ def calculoApi(request):
             tabla_6d = cd['tabla_6d']
 
             tanque = Tanque.objects.filter(id=request.POST['tanque']).values()
-            lote = LoteApi.objects.filter(id=request.POST['lote_api']).values()
+            lote = LoteApi.objects.filter(id=request.POST['lote']).values()
             altura_medicion_tanque = tanque[0]['altura_medicion']
             temperatura = lote[0]['temperatura']
             api = lote[0]['api']
@@ -743,7 +743,10 @@ def calculoApi(request):
             masa1 = galones * tabla_6d
             tabla13 = ((141.3819577/(api + 131.5)) - 0.001199407795) * 3.785411784
             form.instance.masa = masa1 * tabla13
-            form.instance.densidad = form.instance.masa / form.instance.volumen
+            try:
+                form.instance.densidad = form.instance.masa / form.instance.volumen
+            except ZeroDivisionError:
+                form.instance.densidad = 0
             form.instance.uc = request.user
             form.save()
             return redirect('listado_tanques_ope')
@@ -798,8 +801,6 @@ class BorrarLoteApi( SuccessMessageMixin, SinPrivilegios, DeleteView):
     success_message = "Lote elimiando satisfactoriamente"
 
 
-
-
 @login_required(login_url='login')
 def detalle_ocupacion_tk_api(request, id):
     calculo = CalculoApi.objects.filter(tanque_id=id).order_by('-creado')[:2]
@@ -812,7 +813,7 @@ def detalle_ocupacion_tk_api(request, id):
     try:
         volumen_actual_tk = calculo_tk[0]['volumen']
         ultima_medicion = calculo_tk[0]['creado']
-        calculo_lote = calculo_tk[0]['lote_api_id']
+        calculo_lote = calculo_tk[0]['lote_id']
         tipo_medicion = calculo_tk[0]['estado']
     except IndexError:
         volumen_actual_tk = 0
@@ -942,7 +943,7 @@ def exportar_excel_api(request, id):
                 "{:,.2f}".format(d.volumen).replace(",", "@").replace(".", ",").replace("@", "."),
                 d.densidad,
                 "{:,.2f}".format(d.masa).replace(",", "@").replace(".", ",").replace("@", "."),
-                d.lote_api.producto.upper(),
+                d.lote.producto.upper(),
                 d.uc.username.upper(),
             ])
         except AttributeError:

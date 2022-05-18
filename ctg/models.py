@@ -155,7 +155,7 @@ class LoteApiCtg(ClaseBase):
 
 class CalculoApiCtg(ClaseBase):
     tanque = models.ForeignKey(TanqueCtg, on_delete=models.CASCADE)
-    lote_api = models.ForeignKey(LoteApiCtg, on_delete=models.CASCADE, related_name='lote_api')
+    lote = models.ForeignKey(LoteApiCtg, on_delete=models.CASCADE, related_name='lote_api')
     medicion = models.FloatField(max_length=7, verbose_name="Medición" ,default=0)
     tabla_6d = models.FloatField(max_length=7)
     volumen = models.FloatField(max_length=8, blank=True, null=True)

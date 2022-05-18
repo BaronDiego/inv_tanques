@@ -290,7 +290,7 @@ def detalle_ocupacion_tk(request, id):
         try:
             volumen_actual_tk_api = calculo_tk_api[0]['volumen']
             ultima_medicion_api = calculo_tk_api[0]['creado']
-            calculo_lote_api = calculo_tk_api[0]['lote_api_id']
+            calculo_lote_api = calculo_tk_api[0]['lote_id']
             tipo_medicion_api = calculo_tk_api[0]['estado']
         except IndexError:
             volumen_actual_tk_api = 0
@@ -488,7 +488,7 @@ def exportar_excel_tanques_ctg(request):
             qs.tanque.tag,
             qs.tanque.volumen / 1000,
             qs.masa / 1000,
-            qs.lote.cliente,
+            "{}".format(str(qs.lote.cliente)),
             qs.lote.referencia,
             qs.lote.producto.upper()
         ])
@@ -731,7 +731,7 @@ def calculoApiCtg(request):
             tabla_6d = cd['tabla_6d']
 
             tanque = TanqueCtg.objects.filter(id=request.POST['tanque']).values()
-            lote = LoteApiCtg.objects.filter(id=request.POST['lote_api']).values()
+            lote = LoteApiCtg.objects.filter(id=request.POST['lote']).values()
             altura_medicion_tanque = tanque[0]['altura_medicion']
             temperatura = lote[0]['temperatura']
             api = lote[0]['api']
@@ -815,7 +815,7 @@ def detalle_ocupacion_tk_api_ctg(request, id):
     try:
         volumen_actual_tk = calculo_tk[0]['volumen']
         ultima_medicion = calculo_tk[0]['creado']
-        calculo_lote = calculo_tk[0]['lote_api_id']
+        calculo_lote = calculo_tk[0]['lote_id']
         tipo_medicion = calculo_tk[0]['estado']
     except IndexError:
         volumen_actual_tk = 0
@@ -901,7 +901,7 @@ def exportar_excel_api(request, id):
                 "{:,.2f}".format(d.volumen).replace(",", "@").replace(".", ",").replace("@", "."),
                 d.densidad,
                 "{:,.2f}".format(d.masa).replace(",", "@").replace(".", ",").replace("@", "."),
-                d.lote_api.producto.upper(),
+                d.lote.producto.upper(),
                 d.uc.username.upper(),
             ])
         except AttributeError:

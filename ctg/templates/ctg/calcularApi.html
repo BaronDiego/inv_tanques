@@ -25,9 +25,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="id_lote_api">Lote</label>
-                                <select name="lote_api" required="" id="id_lote_api" class="form-control">
+                                <select name="lote" required="" id="id_lote_api" class="form-control">
                                     <option value="" selected="">Seleccione lote</option>
-                                    {% for t in form.lote_api %}
+                                    {% for t in form.lote %}
                                         <option value="{{t.id}}">{{t}}</option>
                                     {% endfor %}
                                 </select>
