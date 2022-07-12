@@ -871,7 +871,7 @@ def detalle_ocupacion_tk_api(request, id):
 @login_required(login_url='login')
 def exportar_excel_tanques(request):
     export = []
-    export.append(['Tanque','Volumen Tanque (m3)','Masa (TON)','Cliente','Lote (DO)','Producto'])
+    export.append(['Tanque','Volumen Tanque (m3)','Masa (TON)','Cliente','Lote (DO)','Producto', 'Fecha Medición'])
 
     idis_tk = Tanque.objects.all().values()
     list_idis = []
@@ -879,24 +879,45 @@ def exportar_excel_tanques(request):
         list_idis.append(id['id'])
 
     calculos = []
-    for ct in list_idis:
-        qs = Calculo.objects.filter(tanque_id=ct).first()
-        if qs:
-            calculos.append(qs)
+    qs_std_a = []
+    qs_api_a = []
 
-    for qs in calculos:
+    
+
+
+    for ct in list_idis:
+        if Calculo.objects.filter(tanque_id=ct).exists():
+            qs_std = Calculo.objects.filter(tanque_id=ct).first()
+            qs_std_a.append(qs_std)
+    
+    for ct in list_idis:
+        if CalculoApi.objects.filter(tanque_id=ct).exists():
+            qs_api = CalculoApi.objects.filter(tanque_id=ct).first()
+            qs_api_a.append(qs_api)
+
+    qs_std_a += qs_api_a
+
+    for qs in qs_std_a:
         if qs.masa == 0:
             qs.lote.cliente = "Sin cliente"
             qs.lote.producto = "Vacio"
 
+        
         export.append([
             qs.tanque.tag,
             qs.tanque.volumen / 1000,
             qs.masa / 1000,
-            qs.lote.cliente,
+            "{}".format(str(qs.lote.cliente)),
             qs.lote.referencia,
-            qs.lote.producto.upper()
+            qs.lote.producto.upper(),
+            qs.creado.date()
         ])
+
+
+    today    = datetime.now()
+    strToday = today.strftime("%Y%m%d")
+    sheet = excel.pe.Sheet(export)
+    return excel.make_response(sheet, "xlsx", file_name="EstadoPlantaBun"+"_"+strToday+".xlsx")
 
 
     today    = datetime.now()
