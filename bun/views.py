@@ -920,11 +920,6 @@ def exportar_excel_tanques(request):
     return excel.make_response(sheet, "xlsx", file_name="EstadoPlantaBun"+"_"+strToday+".xlsx")
 
 
-    today    = datetime.now()
-    strToday = today.strftime("%Y%m%d")
-    sheet = excel.pe.Sheet(export)
-    return excel.make_response(sheet, "xlsx", file_name="dataTanquesBun"+"_"+strToday+".xlsx")
-
 
 @login_required(login_url='login')
 def exportar_excel_api(request, id):
