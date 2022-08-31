@@ -79,7 +79,7 @@ def calculo(request):
             try:
                 form.instance.volumen = int(medicion_aforo[0]['medicion'])
                 form.instance.densidad = densidad_ref - ((temperatura_tanque-temperatura_ref)*factor_correccion)
-                form.instance.masa = int(form.instance.densidad * form.instance.volumen) 
+                form.instance.masa = int(form.instance.densidad * form.instance.volumen)
                 form.instance.uc = request.user
                 form.save()
                 return redirect('listado_tanques_ope')
@@ -871,7 +871,7 @@ def detalle_ocupacion_tk_api(request, id):
 @login_required(login_url='login')
 def exportar_excel_tanques(request):
     export = []
-    export.append(['Tanque','Volumen Tanque (m3)','Masa (TON)','Cliente','Lote (DO)','Producto', 'Fecha Medición'])
+    export.append(['Tanque','Lote (DO)','Volumen Tanque (m3)','Cliente','Producto','Masa (KG)','Fecha Medición'])
 
     idis_tk = Tanque.objects.all().values()
     list_idis = []
@@ -881,9 +881,6 @@ def exportar_excel_tanques(request):
     calculos = []
     qs_std_a = []
     qs_api_a = []
-
-    
-
 
     for ct in list_idis:
         if Calculo.objects.filter(tanque_id=ct).exists():
@@ -905,12 +902,12 @@ def exportar_excel_tanques(request):
         
         export.append([
             qs.tanque.tag,
-            qs.tanque.volumen / 1000,
-            qs.masa / 1000,
-            "{}".format(str(qs.lote.cliente)),
             qs.lote.referencia,
+            "{0:.2f}".format(qs.tanque.volumen / 1000),
+            "{}".format(str(qs.lote.cliente)),
             qs.lote.producto.upper(),
-            qs.creado.date()
+            "{0:.2f}".format(qs.masa / 1000),
+            qs.creado.date().strftime("%d/%m/%Y")
         ])
 
 
@@ -1009,3 +1006,89 @@ def buscar_lote_api(request):
         'cantidad':cantidad,
         'q':q
         })
+
+
+@login_required(login_url='login')
+def enviar_data_erp_api(request, id):
+    calculo = CalculoApi.objects.filter(tanque_id=id).order_by('-creado')[:2]
+    if calculo == "" or calculo == 0:
+        calculo = 0
+    calculo_tk = CalculoApi.objects.filter(tanque_id=id).order_by('-creado').values()[:1]
+    if calculo_tk == "":
+        calculo_tk = 0
+    # volumen_actual_tk = calculo_tk[0]['volumen'] 
+    try:
+        ultima_medicion = calculo_tk[0]['creado']
+        calculo_lote = calculo_tk[0]['lote_id']
+        tipo_medicion = calculo_tk[0]['estado']
+        creado = calculo_tk[0]['creado']
+    except IndexError:
+        volumen_actual_tk = 0
+        ultima_medicion = 0
+        calculo_lote = 0
+    
+    lote = LoteApi.objects.filter(id=calculo_lote).values()
+    try:
+        lote_producto = lote[0]['producto']
+        lote_refencia = lote[0]['referencia']
+        masa_tk = calculo_tk[0]['masa']
+        # lote_buque = lote[0]['nombre_buque']
+    except IndexError:
+        lote_producto = 0
+        masa_tk = 0
+
+    tanque = Tanque.objects.filter(id=id).values()
+    tag = tanque[0]['tag']
+    id_tk = tanque[0]['id']
+    terminal = tanque[0]['terminal']
+    bodega = tanque[0]['bodega']
+    masa_tk_str = int(masa_tk)
+    hoy = date.today()
+    hoy2=hoy.strftime("%y%m%d")
+    
+    ### Enviar cantidad a SIESA ###
+    url = "http://localhost/api_GTIntegration/api/algranel/ajusteInventario"
+    datos = {
+        "ajuste": {
+            "f350_id_co": "002",
+            "f350_id_tipo_docto": "AJM",
+            "f350_consec_docto": "1",
+            "f350_fecha": hoy2,
+            "f350_id_tercero": "",
+            "f350_notas": "TEST api",
+            "f450_docto_alterno": "INDO7461",
+            "movimiento": [
+            {
+                "f470_id_co": "002",
+                "f470_id_tipo_docto": "AJM",
+                "f470_consec_docto": "1",
+                "f470_nro_registro": "1",
+                "f470_id_bodega": bodega,
+                "f470_id_ubicacion_aux": tag,
+                "f470_id_lote": lote_refencia,
+                "f470_id_motivo": "",
+                "f470_id_co_movto": "002",
+                "f470_id_ccosto_movto": "",
+                "f470_id_unidad_medida": "KG",
+                "f470_cant_base": masa_tk_str,
+                "f470_costo_prom_uni": "",
+                "f470_notas": "TEST API",
+                "f470_referencia_item": lote_producto,
+                "f470_id_un_movto": "001"
+            }
+            ]
+        },
+        "f_cia": "1"
+    }
+
+    headers = {"content-type": "application/json"}
+
+    r = post(url=url, data=json.dumps(datos), headers=headers)
+    print(r)
+    if r.status_code == 200:
+        messages.success(request,"La cantidad {} ha sido guardada correctamente en la ERP".format(masa_tk_str))
+    else:
+        messages.error(request,"Hay un error al guadar la cantidad")
+    
+
+    return render(request, 'bun/data_post.html', {'r':r, 'cantidad':masa_tk_str})

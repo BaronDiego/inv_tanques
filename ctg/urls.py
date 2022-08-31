@@ -19,7 +19,7 @@ urlpatterns = [
     path('editar_lote/<pk>/', views.EditarLote.as_view(), name='editar_lote_ctg'),
     path('detalle_lote/<pk>/', views.DetalleLote.as_view(), name='detalle_lote_ctg'),
     path('eliminar_lote/<pk>/', views.BorrarLote.as_view(), name='eliminar_lote_ctg'),
-    path('calcular_api/', views.crearCalculoApi, name='calcular_api_ctg'),
+    path('calcular_api/', views.calculoApiCtg, name='calcular_api_ctg'),
     path('calcular_pruebas/', views.calculo_pruebas_ctg, name='calcular_pruebas_ctg'),
     path('detalle_ocupacion_tk_pruebas/<int:id>/', views.detalle_ocupacion_tk_pruebas, name='detalle_ocupacion_tk_pruebas_ctg'),
     path('listado_tanques_operacion_pruebas/', views.listado_tanques_pruebas, name='listado_tanques_ope_pruebas_ctg'),
@@ -37,4 +37,5 @@ urlpatterns = [
     path('editar_lote_api/<pk>/', views.EditarLoteApiCtg.as_view(), name='editar_lote_api_ctg'),
     path('eliminar_lote_api/<pk>/', views.BorrarLoteApiCtg.as_view(), name='eliminar_lote_api_ctg'),
     path('exportar_tanques/', views.exportar_excel_tanques_ctg, name="exportar_excel_tanques_ctg"),
+    path('enviar_data_erp_ctg_api/<int:id>/', views.enviar_data_erp_api_ctg, name='enviar_data_erp_ctg_api'),
 ]

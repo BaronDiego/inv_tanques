@@ -82,7 +82,8 @@ class Lote(ClaseBase):
 
 class Calculo(ClaseBase):
     tanque = models.ForeignKey(Tanque, on_delete=models.CASCADE, related_name='tanque')
-    lote = models.ForeignKey(Lote, on_delete=models.CASCADE, null=True, related_name='lote', verbose_name="Referencia/Lote")
+    do = models.IntegerField(blank=True, null=True,verbose_name="DO")
+    lote = models.ForeignKey(Lote, on_delete=models.CASCADE, null=True, related_name='lote', verbose_name="Lote Siesa")
     estado = models.CharField(max_length=2, choices=TIPO_MEDIDA)
     medicion = models.FloatField(max_length=7, blank=True, null=True, verbose_name="Medición" ,default=0)
     tabla_6d = models.FloatField(max_length=8, blank=True, null=True, default=0)
@@ -157,6 +158,7 @@ class LoteApi(ClaseBase):
 
 class CalculoApi(ClaseBase):
     tanque = models.ForeignKey(Tanque, on_delete=models.CASCADE)
+    do = models.IntegerField(blank=True, null=True,verbose_name="DO")
     lote = models.ForeignKey(LoteApi, on_delete=models.CASCADE, related_name='lote_api')
     medicion = models.FloatField(max_length=7, verbose_name="Medición" ,default=0)
     tabla_6d = models.FloatField(max_length=7)

@@ -79,6 +79,7 @@ class LoteCtg(ClaseBase):
 
 class CalculoCtg(ClaseBase):
     tanque = models.ForeignKey(TanqueCtg, on_delete=models.CASCADE, related_name='tanque')
+    do = models.IntegerField(blank=True, null=True,verbose_name="DO")
     lote = models.ForeignKey(LoteCtg, on_delete=models.CASCADE, null=True, related_name='lote')
     estado = models.CharField(max_length=2, choices=TIPO_MEDIDA)
     medicion = models.FloatField(max_length=7, blank=True, null=True, verbose_name="Medición" ,default=0)
@@ -155,6 +156,7 @@ class LoteApiCtg(ClaseBase):
 
 class CalculoApiCtg(ClaseBase):
     tanque = models.ForeignKey(TanqueCtg, on_delete=models.CASCADE)
+    do = models.IntegerField(blank=True, null=True,verbose_name="DO")
     lote = models.ForeignKey(LoteApiCtg, on_delete=models.CASCADE, related_name='lote_api')
     medicion = models.FloatField(max_length=7, verbose_name="Medición" ,default=0)
     tabla_6d = models.FloatField(max_length=7)

@@ -24,7 +24,11 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Lote</label>
+                                <label>DO</label>
+                                <input type="number" class="form-control" name="{{form.do.name}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Lote Siesa</label>
                                 <select name="lote" id="lote" class="form-control">
                                     <option value="0">Seleccione lote</option>
                                     {% for t in form.lote %}
